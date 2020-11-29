@@ -102,6 +102,8 @@ function main() {
    // starts drawing frames
    goAudio();
    oneFrame();
+
+   bbs();
 }
 
 function cpu_actual_speed() {
