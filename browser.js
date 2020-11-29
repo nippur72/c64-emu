@@ -114,11 +114,11 @@ async function parseQueryStringCommands() {
    options = getQueryStringObject(options);  
 
    if(options.config !== undefined) {
-      vic20.config(options.config);
+      c64.config(options.config);
    }
 
    if(options.joy !== undefined) {
-      vic20.emu_joy(options.joy);
+      c64.emu_joy(options.joy);
       console.log(`Joystick emulation ${options.joy==1?"enabled":"disabled"}`);
    }
 

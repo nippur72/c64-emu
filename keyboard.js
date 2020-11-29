@@ -12,7 +12,7 @@ function keyDown(e) {
       let scroll_lock_key_pressed = e.getModifierState("ScrollLock");
       last_scroll_lock = scroll_lock_key_pressed;
       let emu_joystick = scroll_lock_key_pressed ? 1 : 0;
-      vic20.emu_joy(emu_joystick);
+      c64.emu_joy(emu_joystick);
       console.log(`Joystick emulation ${emu_joystick==1?"enabled":"disabled"}`);
    }
 
@@ -26,7 +26,7 @@ function keyDown(e) {
 
    // RESET key is CTRL+ALT+BREAK
    if(e.code === "Pause" && e.altKey && e.ctrlKey) {
-      vic20.reset();
+      c64.reset();
       e.preventDefault(); 
       return;
    }

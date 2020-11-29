@@ -1,6 +1,6 @@
-# VIC20 Javascript emulator
+# C64 Javascript emulator
 
-A JavaScript emulator for the VIC20 computer.
+A JavaScript emulator for the Commodore 64 computer.
 
 This emulator is based on the amazing work of Andre Weissflog
 
@@ -9,7 +9,7 @@ https://github.com/floooh/chips-test
 
 Copyright (c) 2017 Andre Weissflog
 
-Open the emulator directly in your browser: [vic20-emu](https://nippur72.github.io/vic20-emu/)
+Open the emulator directly in your browser: [c64-emu](https://nippur72.github.io/c64-emu/)
 
 
 QUERYSTRING OPTIONS
@@ -22,7 +22,7 @@ QUERYSTRING OPTIONS
 LOADING AND SAVING FILES
 ========================
 
-- prg files (`.prg`) are common VIC-20 program files that are loaded in memory.
+- prg files (`.prg`) are common C64 program files that are loaded in memory.
 The first two bytes contain the loading address.
 
 Dragging & dropping a ".prg" file on the emulator's window causes the file to be loaded.
@@ -42,10 +42,10 @@ These are the commands you can type from the JavaScript console (F12 key):
 
 MISC
 ========
-- `vic20.config(n)` configures memory (n from 0 to 5)
-- `vic20.reset()` resets the VIC20 (also via CTRL+ALT+BREAK keys)
-- `vic20.peek(address)`
-- `vic20.poke(address, data)`
+- `c64.config(n)` configures memory (n from 0 to 5)
+- `c64.reset()` resets the c64 (also via CTRL+ALT+BREAK keys)
+- `c64.peek(address)`
+- `c64.poke(address, data)`
 
 
 

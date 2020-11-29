@@ -33,7 +33,7 @@ let options = {
 
 // scanline version
 function renderLines() {
-   vic20.exec();
+   c64.exec();
 }
 
 function renderAllLines() {
@@ -46,12 +46,12 @@ function renderAllLines() {
       if(key_event.type === "press") {
          let keys = key_event.hardware_keys;
          //keys.forEach((k) => console.log(k));
-         keys.forEach((k) => vic20.key_down(k));
+         keys.forEach((k) => c64.key_down(k));
       }
       else if(key_event.type === "release") {
          let keys = key_event.hardware_keys;
          //keys.forEach((k) => console.log(k));
-         keys.forEach((k) => vic20.key_up(k));
+         keys.forEach((k) => c64.key_up(k));
       }
    }
 
@@ -90,7 +90,7 @@ function oneFrame() {
 
 function main() {
 
-   vic20.config(0);
+   c64.config(0);
 
    parseQueryStringCommands();
 

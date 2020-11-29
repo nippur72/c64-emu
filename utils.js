@@ -88,11 +88,11 @@ function paste(line) {
 }
 
 function pasteChar(c) {
-   while(vic20.peek(198) !== 0) {
+   while(c64.peek(198) !== 0) {
       renderLines();
    }
-   vic20.poke(631,c);
-   vic20.poke(198,1);
+   c64.poke(631,c);
+   c64.poke(198,1);
 }
 
 function wait(time) {
@@ -242,6 +242,6 @@ function led_write(value) {
 async function makeBase64(fileName) {
    const bytes = await readFile(fileName);
    let long_url = window.btoa(bytes);
-   console.log(`https://nippur72.github.io/vic20-emu?b=${long_url}`);
+   console.log(`https://nippur72.github.io/c64-emu?b=${long_url}`);
 }
 

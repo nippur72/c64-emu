@@ -78,26 +78,7 @@ function loadBytes(bytes, address, fileName) {
 
    const load_address = (buffer[0] | buffer[1] << 8);
 
-   /*
-   // if config was not specified (auto) change config
-   if(options.config == undefined) {
-           if(load_address == 0x1001) vic20.config(0);  // unexpanded
-      else if(load_address == 0x0401) vic20.config(1);  // 3k expansion
-      else if(load_address == 0x1201) vic20.config(3);  // 8K or more expansion
-      else vic20.config(0);
-   }
-
-   if(load_address == 0xA000) {
-      // it's a cartdrige
-      vic20.insert_cartdrige(buffer, bytes.length);
-   }
-   else {
-      // it's normal .prg
-      setTimeout(()=>do_load(buffer, bytes.length), 2000);
-   }
-   */
-
-   setTimeout(()=>do_load(buffer, bytes.length), 2000);
+   setTimeout(()=>do_load(buffer, bytes.length), 4000);
 
    if(fileName === undefined) fileName = "autoload";
    //console.log(`loaded "${fileName}" ${bytes.length} bytes from ${hex(startAddress,4)}h to ${hex(endAddress,4)}h`);
@@ -105,8 +86,8 @@ function loadBytes(bytes, address, fileName) {
 }
 
 function do_load(buffer, num_bytes) {
-   vic20.load_prg(buffer, num_bytes);
-   //paste("RUN\r");
+   c64.load_prg(buffer, num_bytes);
+   paste("RUN\r");
 }
 
 async function load_file(fileName, address) {   
@@ -118,7 +99,7 @@ async function load_tap(fileName) {
    const bytes = await readFile(fileName);
 
    let buffer = new Uint8Array(bytes.buffer);
-   let ok = vic20.tape.insert(buffer, bytes.length);
+   let ok = c64.tape.insert(buffer, bytes.length);
 
    if(ok) {
       console.log(`insert tape file "${fileName}" of ${bytes.length} bytes`);

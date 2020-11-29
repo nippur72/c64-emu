@@ -16,7 +16,7 @@ let keyboard_release;
 let keyboard_poll;
 */
 
-let vic20 = { tape: { } };
+let c64 = { tape: { } };
 
 function load_wasm(ready_cb) {
 
@@ -25,34 +25,34 @@ function load_wasm(ready_cb) {
    let instance = emscripten_module({ wasmBinary: emscripten_wasm_binary, onRuntimeInitialized: ()=>{
       // makes C exported functions available globally
 
-      vic20.init     = instance.cwrap("sys_init", null);
-      vic20.config   = instance.cwrap("sys_config", null, ['number']);
-      vic20.exec     = instance.cwrap("sys_exec", null);
-      vic20.reset    = instance.cwrap("sys_reset", null);
+      c64.init     = instance.cwrap("sys_init", null);
+      c64.config   = instance.cwrap("sys_config", null, ['number']);
+      c64.exec     = instance.cwrap("sys_exec", null);
+      c64.reset    = instance.cwrap("sys_reset", null);
 
-      vic20.key_down = instance.cwrap("sys_key_down" , null, ['number'] );
-      vic20.key_up   = instance.cwrap("sys_key_up"   , null, ['number'] );
-      vic20.joystick = instance.cwrap("sys_joystick" , null, ['number'] );
+      c64.key_down = instance.cwrap("sys_key_down" , null, ['number'] );
+      c64.key_up   = instance.cwrap("sys_key_up"   , null, ['number'] );
+      c64.joystick = instance.cwrap("sys_joystick" , null, ['number'] );
 
-      vic20.emu_joy  = instance.cwrap("sys_set_joystick_type" , null, ['number'] );
+      c64.emu_joy  = instance.cwrap("sys_set_joystick_type" , null, ['number'] );
 
-      vic20.load_prg         = instance.cwrap("sys_quick_load" , null, ['array', 'number'] );
-      //vic20.insert_cartdrige = instance.cwrap("sys_insert_rom_cartdrige" , null, ['array', 'number'] );
+      c64.load_prg         = instance.cwrap("sys_quick_load" , null, ['array', 'number'] );
+      //c64.insert_cartdrige = instance.cwrap("sys_insert_rom_cartdrige" , null, ['array', 'number'] );
 
-      vic20.peek        = instance.cwrap("sys_mem_cpu_rd"   , 'number', ['number'] );
-      vic20.poke        = instance.cwrap("sys_mem_cpu_wr"   , null, ['number', 'number'] );
+      c64.peek        = instance.cwrap("sys_mem_cpu_rd"   , 'number', ['number'] );
+      c64.poke        = instance.cwrap("sys_mem_cpu_wr"   , null, ['number', 'number'] );
 
-      //vic20.dump_vic = instance.cwrap("sys_dump_vic"   , null );
+      //c64.dump_vic = instance.cwrap("sys_dump_vic"   , null );
 
-      vic20.cas_port = instance.cwrap("sys_cas_port"   , 'number');
+      c64.cas_port = instance.cwrap("sys_cas_port"   , 'number');
 
-      vic20.tape.insert = instance.cwrap("sys_insert_tape"  , 'bool', ['array', 'number'] );
-      vic20.tape.remove = instance.cwrap("sys_remove_tape"  , null );
-      vic20.tape.play   = instance.cwrap("sys_tape_play"    , null );
-      vic20.tape.stop   = instance.cwrap("sys_tape_stop"    , null );
+      c64.tape.insert = instance.cwrap("sys_insert_tape"  , 'bool', ['array', 'number'] );
+      c64.tape.remove = instance.cwrap("sys_remove_tape"  , null );
+      c64.tape.play   = instance.cwrap("sys_tape_play"    , null );
+      c64.tape.stop   = instance.cwrap("sys_tape_stop"    , null );
 
-      mem_read = vic20.peek;
-      mem_write = vic20.poke;
+      mem_read = c64.peek;
+      mem_write = c64.poke;
 
       /*
       cpu_init            = instance.cwrap("cpu_init", null);

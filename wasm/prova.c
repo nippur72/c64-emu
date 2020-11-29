@@ -49,7 +49,7 @@ void sys_init() {
    desc.c1530_enabled = false;                       /* enable the C1530 datassette emulation */
 
    // video
-   desc.pixel_buffer = pixel_buffer;                 /* pointer to a linear RGBA8 pixel buffer, query required size via vic20_max_display_size() */
+   desc.pixel_buffer = pixel_buffer;                 /* pointer to a linear RGBA8 pixel buffer */
    desc.pixel_buffer_size = PIXBUFSIZE;              /* size of the pixel buffer in bytes */
    //desc.end_frame_cb = end_frame_cb;
 
@@ -75,12 +75,6 @@ void sys_init() {
    desc.c1541_enabled = false;
 
    c64_init(&sys, &desc);
-
-   /*
-   int w = vic20_std_display_width();
-   int h = vic20_std_display_height();
-   byte unused = (byte) EM_ASM_INT({ console.log($0, $1); }, w, h );
-   */
 }
 
 EMSCRIPTEN_KEEPALIVE
