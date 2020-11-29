@@ -11,7 +11,6 @@ const MODEM_DATA_REQ = 0xD7F3;
 const MODEM_ACK      = 0xD7F1;
 const MODEM_CONNST   = 0xD7F4;
 
-
 // function called from C64 when CPU reads in the range $D7F0-$D7FF
 function modem_read(addr)
 {
