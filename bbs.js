@@ -53,17 +53,18 @@ function modem_write(addr,data)
 function bbs() {
    let ws_connection = new WebSocket('ws://localhost:8080/', 'bbs');
 
-   ws_connection.onerror = function() {
+   ws_connection.onerror = function(err) {
       console.log('BBS: connection error');
+      printm('<ERROR CONNECTING TO BBS>\r');
    };
 
    ws_connection.onopen = function() {
       console.log('BBS: connected');
+      printm('<CONNECTED>\r');
    };
 
    ws_connection.onclose = function() {
       console.log('BBS: disconnected');
-      // ws_connection.close();
       modem_send_to_ws = undefined;
    };
 
@@ -90,4 +91,27 @@ function bbs() {
          console.log("BBS: can't send, BBS is disconnected");
       }
    };
+}
+
+function string2Array(str) {
+   let arr = [];
+
+   for(let t=0; t<str.length; t++)
+      arr.push(str.charCodeAt(t) & 0xFF);
+
+   return new Uint8Array(arr);
+}
+
+function array2String(data) {
+   let str = "";
+
+   for(var index=0; index<data.length; index++)
+      str += String.fromCharCode(data[index]);
+
+   return str;
+}
+
+function printm(msg) {
+   let data = string2Array(msg);
+   data.forEach(e=>modem_receive_buffer.push(e));
 }
