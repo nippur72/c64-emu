@@ -15,11 +15,10 @@ dim MODEM_DATA_OUT    as byte at $D7F2
 dim MODEM_DATA_IN     as byte at $D7F0
 dim MODEM_DATA_REQ    as byte at $D7F3
 dim MODEM_ACK         as byte at $D7F1
+dim MODEM_CONNST      as byte at $D7F4
 
 basic start
-   10 print "{white}{clr}";
-   20 poke 53280,0
-   30 poke 53281,0
+   10 print chr$(14)+"{white}{clr}";
    40 sys {terminal}
 basic end
 
@@ -45,6 +44,10 @@ terminal:
     jsr GETIN
     if a<>#0 then sta MODEM_DATA_OUT
 
+    lda MODEM_CONNST
+    sta 53280
+    sta 53281
+
     jmp terminal
 
 ; cursor on/off (C) Francesco Sblendorio
@@ -67,28 +70,3 @@ cursor_off:
 	ldy #$ff
 	sty $cc
     rts
-
-
-
-
-
-
-
-
-
-/*
-dim pippo as byte init 0
-
-terminal:
-   inc pippo
-   lda pippo
-   and #$F
-   or  #64
-   if a=#(64+15) then
-      lda #13
-      jsr CHROUT
-   else
-      jsr CHROUT
-   end if
-   jmp terminal
-*/
