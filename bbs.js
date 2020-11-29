@@ -5,21 +5,27 @@ let modem_send_to_ws = undefined;
 let modem_transmit_buffer = [];
 let modem_receive_buffer = [];
 
-const MODEM_IN     = 0xD7F0;
-const MODEM_ACK    = 0xD7F1;
-const MODEM_OUT    = 0xD7F2;
-const MODEM_READY  = 0xD7F3;
+const MODEM_DATA_OUT = 0xD7F2;
+const MODEM_DATA_IN  = 0xD7F0;
+const MODEM_DATA_REQ = 0xD7F3;
+const MODEM_ACK      = 0xD7F1;
+const MODEM_CONNST   = 0xD7F4;
+
 
 // function called from C64 when CPU reads in the range $D7F0-$D7FF
 function modem_read(addr)
 {
-   if(addr == MODEM_IN) {
+   if(addr == MODEM_DATA_IN) {
       if(modem_receive_buffer.length == 0) return 0;
       else return modem_receive_buffer[0];
    }
-   else if(addr == MODEM_READY) {
+   else if(addr == MODEM_DATA_REQ) {
       if(modem_receive_buffer.length == 0) return 0;
       else return 255;
+   }
+   else if(addr == MODEM_CONNST) {
+      if(modem_send_to_ws == undefined) return 2;
+      else return 0;
    }
 }
 
@@ -38,7 +44,7 @@ function modem_write(addr,data)
          modem_state = 1;
       }
    }
-   if(addr==MODEM_OUT) {
+   if(addr==MODEM_DATA_OUT) {
       modem_transmit_buffer.push(data);
       if(modem_send_to_ws != undefined) {
           modem_send_to_ws(modem_transmit_buffer);
@@ -51,16 +57,16 @@ function modem_write(addr,data)
 }
 
 function bbs() {
-   let ws_connection = new WebSocket('ws://localhost:8080/', 'bbs');
+   let ws_connection = new WebSocket('ws://bbs.sblendorio.eu:8080/', 'bbs');
 
    ws_connection.onerror = function(err) {
       console.log('BBS: connection error');
-      printm('<ERROR CONNECTING TO BBS>\r');
+      printm(`${new Date().toLocaleTimeString()} ERROR CONNECTING TO BBS\r`);
    };
 
    ws_connection.onopen = function() {
       console.log('BBS: connected');
-      printm('<CONNECTED>\r');
+      printm(`${new Date().toLocaleTimeString()} CONNECTED\r`);
    };
 
    ws_connection.onclose = function() {
