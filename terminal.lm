@@ -1,0 +1,94 @@
+   processor 6502
+
+include <macros.lm>
+include <macros_16.lm>
+include <c64.lm>
+
+// rom kernal entries
+const GETIN  = $FFE4
+const CHROUT = $FFD2
+
+    org BASIC_RAM
+
+// fictional modem I/O port
+dim MODEM_IN     as byte at $D7F0
+dim MODEM_ACK    as byte at $D7F1
+dim MODEM_OUT    as byte at $D7F2
+dim MODEM_READY  as byte at $D7F3
+
+basic start
+   10 print "{white}{clr}";
+   20 poke 53280,0
+   30 poke 53281,0
+   40 sys {terminal}
+basic end
+
+terminal:
+    lda MODEM_READY
+    if a<>#0 then
+        jsr cursor_off
+        do
+            ldx #0
+            stx $D4
+            stx $D8
+            lda MODEM_IN
+            jsr CHROUT
+            lda #0
+            sta MODEM_ACK
+            lda #1
+            sta MODEM_ACK
+            lda MODEM_READY
+        loop while not zero
+        jsr cursor_on
+    end if
+
+    jsr GETIN
+    if a<>#0 then sta MODEM_OUT
+
+    jmp terminal
+
+; cursor on/off (C) Francesco Sblendorio
+; https://github.com/sblendorio/ultimateii-dos-lib/blob/master/src/samples/screen_utility.c
+
+cursor_on:
+    ldy #$00
+	sty $cc
+    rts
+
+cursor_off:
+	ldy $cc
+	if zero then
+        ldy #$01
+        sty $cd
+        do
+            ldy $cf
+        loop while not zero
+    end if
+	ldy #$ff
+	sty $cc
+    rts
+
+
+
+
+
+
+
+
+
+/*
+dim pippo as byte init 0
+
+terminal:
+   inc pippo
+   lda pippo
+   and #$F
+   or  #64
+   if a=#(64+15) then
+      lda #13
+      jsr CHROUT
+   else
+      jsr CHROUT
+   end if
+   jmp terminal
+*/
