@@ -38,8 +38,12 @@ void audio_cb(const float* samples, int num_samples, void* user_data) {
   // byte unused = (byte) EM_ASM_INT({ audio_buf_ready($0, $1); }, samples, num_samples );
 }
 
+int counter = 0;
 void end_frame_cb(void* user_data) {
-   byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
+   if((counter++ & 1) == 0) {
+      // draw every two frames
+      byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
+   }
 }
 
 EMSCRIPTEN_KEEPALIVE
