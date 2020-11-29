@@ -570,15 +570,12 @@ void c64_tick(c64_t* sys) {
     sys->pins = _c64_tick(sys, sys->pins);
 }
 
-uint32_t gticks = 0;
-
 void c64_exec(c64_t* sys, uint32_t micro_seconds) {
     CHIPS_ASSERT(sys && sys->valid);
     uint32_t num_ticks = clk_us_to_ticks(C64_FREQUENCY, micro_seconds);
     uint64_t pins = sys->pins;
     for (uint32_t ticks = 0; ticks < num_ticks; ticks++) {
         pins = _c64_tick(sys, pins);
-        gticks++;
     }
     sys->pins = pins;
     kbd_update(&sys->kbd, micro_seconds);
