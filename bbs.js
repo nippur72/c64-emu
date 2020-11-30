@@ -55,12 +55,15 @@ function modem_write(addr,data)
    }
 }
 
+let wstcp_address = "bbs.sblendorio.eu";
+let wstcp_port = "8080";
+
 function bbs() {
-   let ws_connection = new WebSocket('ws://bbs.sblendorio.eu:8080/', 'bbs');
+   let ws_connection = new WebSocket(`ws://${wstcp_address}:${wstcp_port}`, 'bbs');
 
    ws_connection.onerror = function(err) {
       console.log('BBS: connection error');
-      printm(`${new Date().toLocaleTimeString()} ERROR CONNECTING TO BBS\r`);
+      printm(`${new Date().toLocaleTimeString()} ERROR CONNECTING TO WEBSOCKET\r`);
    };
 
    ws_connection.onopen = function() {

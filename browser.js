@@ -142,6 +142,16 @@ async function parseQueryStringCommands() {
          await fetchProgram(name);
       }   
    }
+
+   if(options.wstcp !== undefined) {
+      let r = new RegExp(/(.*):(.*)/g);
+      let matches = [...options.wstcp.matchAll(r)];
+      if(matches.length !== 0) {
+         let m = matches[0];
+         wstcp_address = m[1];
+         wstcp_port = m[2];
+      }
+   }
 }
 
 async function fetchProgram(name)
