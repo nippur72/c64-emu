@@ -1,5 +1,5 @@
 
-let aspect = 1.2;
+let aspect = 1.3;
 
 
 // good values for CRT PAL
