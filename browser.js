@@ -131,6 +131,10 @@ async function parseQueryStringCommands() {
       await crun(filename);
    }
 
+   if(options.wstcp !== undefined) {
+      wstcp_address = options.wstcp;
+   }
+
    if(options.load !== undefined) {
       const name = options.load;
       if(name.startsWith("http")) {
@@ -141,10 +145,6 @@ async function parseQueryStringCommands() {
          // internal load
          await fetchProgram(name);
       }   
-   }
-
-   if(options.wstcp !== undefined) {
-      wstcp_address = options.wstcp;
    }
 }
 
