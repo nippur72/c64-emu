@@ -98,8 +98,7 @@ function main() {
 
    // autostart terminal if loaded from bbs.sblendorio.ue
    let href = window.location.href;
-   //href = "http://bbs.sblendorio.eu";
-   if(href.match(/^http:\/\/bbs\.sblendorio\.eu/g)) {
+   if(href.match(/^http:\/\/bbs\.sblendorio\.eu/g) && options.load === undefined) {
       fetchProgram("nippur72/terminal.prg");
    }
 
