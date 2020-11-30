@@ -20,7 +20,7 @@
 
    */
 
-function pckey_to_hardware_keys_ITA(code, key, e) {
+function pckey_to_hardware_keys_ITA(code, key, shift) {
    //console.log(code, key, e);
    //console.log(e.getModifierState("ScrollLock"));
 
@@ -37,7 +37,7 @@ function pckey_to_hardware_keys_ITA(code, key, e) {
    if(key === "9")             hardware_keys.push( "9".charCodeAt(0) );
    if(key === "0")             hardware_keys.push( "0".charCodeAt(0) );
 
-   if(e.shiftKey) {
+   if(shift) {
       if(code === "KeyQ")         hardware_keys.push( "q".charCodeAt(0) );
       if(code === "KeyW")         hardware_keys.push( "w".charCodeAt(0) );
       if(code === "KeyE")         hardware_keys.push( "e".charCodeAt(0) );
@@ -141,15 +141,15 @@ function pckey_to_hardware_keys_ITA(code, key, e) {
    if(code === "Delete")       hardware_keys.push( 0x01  );
    if(code === "Insert")       hardware_keys.push( 0x07  );
 
-   if(code === "Backspace" &&  e.shiftKey) hardware_keys.push( 0x07  );
-   if(code === "Backspace" && !e.shiftKey) hardware_keys.push( 0x01  );
+   if(code === "Backspace" &&  shift) hardware_keys.push( 0x07  );
+   if(code === "Backspace" && !shift) hardware_keys.push( 0x01  );
 
    if(code === "Enter")        hardware_keys.push( 0x0D  );
    if(code === "Escape")       hardware_keys.push( 0x03  );  // run stop
    if(code === "Backquote")    hardware_keys.push( 0x04  );  // left arrow
 
-   if(code === "Home")               hardware_keys.push( 0x05  );
-   if(code === "Home" && e.shiftKey) hardware_keys.push( 0x06  );
+   if(code === "Home")          hardware_keys.push( 0x05  );
+   if(code === "Home" && shift) hardware_keys.push( 0x06  );
 
    if(code === "ControlLeft")  hardware_keys.push( 0x0E );
    if(code === "ControlRight") hardware_keys.push( 0x0E );

@@ -33,7 +33,7 @@ function keyDown(e) {
 
    // if keyboard ITA
    {
-      const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e);
+      const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey);
       if(hardware_keys.length === 0) return;
       keyboard_buffer.push({ type: "press", hardware_keys });
       e.preventDefault();
@@ -41,9 +41,11 @@ function keyDown(e) {
 }
 
 function keyUp(e) {
-   const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e);
+   const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey);
+   const hardware_keys_unshifted = pckey_to_hardware_keys_ITA(e.code, e.key, true);
    if(hardware_keys.length === 0) return;
    keyboard_buffer.push({ type: "release", hardware_keys });
+   keyboard_buffer.push({ type: "release", hardware_keys: hardware_keys_unshifted });
    e.preventDefault();
 }
 
