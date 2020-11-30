@@ -8,11 +8,8 @@
 
 /******************/
 
-const cpuSpeed = 3686400;    // 7372800/2 number given by @leomil72
-const vdcSpeed = 10738635;   // number given by @leomil72
-const frameRate = vdcSpeed/(342*262*2);   // ~60 Hz
+const frameRate = 50;        // ~50 Hz
 const frameDuration = 1000/frameRate;     // duration of 1 frame in msec
-const cyclesPerLine = cpuSpeed / vdcSpeed * 342;
 
 let stopped = false; // allows to stop/resume the emulation
 

@@ -5,8 +5,8 @@ let aspect = 1.2;
 // good values for CRT PAL
 let SCREEN_W = 392;
 let SCREEN_H = 272;
-let POS_X = 0;
-let POS_Y = 0;
+let POS_X = 3*8;
+let POS_Y = 3*8;
 
 /*
 // values for debug
@@ -21,13 +21,13 @@ let saturation = 1.0;
 function calculateGeometry() {
    // canvas is the outer canvas where the aspect ratio is corrected
    let canvas = document.getElementById("canvas");
-   canvas.width  = SCREEN_W * 2;
-   canvas.height = SCREEN_H * 2;
+   canvas.width  = SCREEN_W * 2 -(POS_X*2);
+   canvas.height = SCREEN_H * 2 -(POS_Y*2);
 
    // screen is the inner canvas that contains the emulated PAL screen
    let screenCanvas = document.createElement("canvas");
-   screenCanvas.width  = SCREEN_W * 2;
-   screenCanvas.height = SCREEN_H * 2;
+   screenCanvas.width  = SCREEN_W * 2 -(POS_X*2);
+   screenCanvas.height = SCREEN_H * 2 -(POS_Y*2);
 
    //console.log(`${screenCanvas.width} ${screenCanvas.height}`);
 }
@@ -75,7 +75,7 @@ function vdp_screen_update(ptr) {
    }
 
    tms9928a_imagedata.data.set(imagedata_buf8);
-   tms9928a_context.putImageData(tms9928a_imagedata, POS_X, POS_Y);
+   tms9928a_context.putImageData(tms9928a_imagedata, -POS_X, -POS_Y);
 
    // update LED
    //document.getElementById("LED").style.visibility = LED>0 ? "visible" : "hidden";
