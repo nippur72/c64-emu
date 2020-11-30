@@ -145,15 +145,6 @@ async function parseQueryStringCommands() {
 
    if(options.wstcp !== undefined) {
       wstcp_address = options.wstcp;
-      /*
-      let r = new RegExp(/(.*):(.*)/g);
-      let matches = [...options.wstcp.matchAll(r)];
-      if(matches.length !== 0) {
-         let m = matches[0];
-         wstcp_address = m[1];
-         wstcp_port = m[2];
-      }
-      */
    }
 }
 
