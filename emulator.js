@@ -99,6 +99,13 @@ function main() {
       autoload.forEach((e,i)=>rom_load(i,e));
    }
 
+   // autostart terminal if loaded from bbs.sblendorio.ue
+   let href = window.location.href;
+   //href = "http://bbs.sblendorio.eu";
+   if(href.match(/bbs\.sblendorio\.eu/g)) {
+      fetchProgram("nippur72/terminal.prg");
+   }
+
    // starts drawing frames
    goAudio();
    oneFrame();
