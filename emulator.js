@@ -103,7 +103,7 @@ function main() {
 
    // autostart terminal if loaded from bbs.sblendorio.ue
    let href = window.location.href;
-   if(href.match(/^http:\/\/bbs\.sblendorio\.eu/g) && options.load === undefined) {
+   if(href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g) && options.load === undefined) {
       fetchProgram("nippur72/terminal.prg");
    }
 
