@@ -98,6 +98,16 @@ void sys_exec() {
 }
 
 EMSCRIPTEN_KEEPALIVE
+void sys_ex(uint32_t msec) {
+   c64_exec(&sys, msec);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void sys_vdp() {
+   byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
+}
+
+EMSCRIPTEN_KEEPALIVE
 void sys_key_down(int key_code) {
    c64_key_down(&sys, key_code);
 }

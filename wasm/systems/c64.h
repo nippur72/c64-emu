@@ -1058,6 +1058,10 @@ static void _c64_init_key_map(c64_t* sys) {
     kbd_register_key(&sys->kbd, 0x01, 0, 0, 0);    /* delete */
     kbd_register_key(&sys->kbd, 0x0C, 3, 6, 1);    /* clear */
     kbd_register_key(&sys->kbd, 0x0D, 1, 0, 0);    /* return */
+
+    kbd_register_key(&sys->kbd, 0x0E, 2, 7, 0);    /* ctrl */
+    kbd_register_key(&sys->kbd, 0x0F, 5, 7, 0);    /* cbm */
+
     kbd_register_key(&sys->kbd, 0x03, 7, 7, 0);    /* stop */
     kbd_register_key(&sys->kbd, 0xF1, 4, 0, 0);
     kbd_register_key(&sys->kbd, 0xF2, 4, 0, 1);

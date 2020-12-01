@@ -30,11 +30,14 @@ let options = {
 
 // scanline version
 function renderLines() {
-   c64.exec();
+   poll_keyboard(); c64.ex(5000);
+   poll_keyboard(); c64.ex(5000);
+   poll_keyboard(); c64.ex(5000);
+   poll_keyboard(); c64.ex(5000);
+   c64.vdp();
 }
 
-function renderAllLines() {
-
+function poll_keyboard() {
    // poll keyboard
    if(keyboard_buffer.length > 0) {
       let key_event = keyboard_buffer[0];
@@ -51,7 +54,9 @@ function renderAllLines() {
          keys.forEach((k) => c64.key_up(k));
       }
    }
+}
 
+function renderAllLines() {
    renderLines();
 }
 

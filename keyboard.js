@@ -2,7 +2,6 @@
 let last_scroll_lock = undefined;
 
 function keyDown(e) {
-
    // from Chrome 71 audio is suspended by default and must resume within an user-generated event
    audioContextResume();
 
@@ -33,19 +32,24 @@ function keyDown(e) {
 
    // if keyboard ITA
    {
-      const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey);
+      const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey, e.ctrlKey, e.altKey);
       if(hardware_keys.length === 0) return;
       keyboard_buffer.push({ type: "press", hardware_keys });
+      key_pressed.push(hardware_keys);
       e.preventDefault();
    }
 }
 
 function keyUp(e) {
-   const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey);
-   const hardware_keys_unshifted = pckey_to_hardware_keys_ITA(e.code, e.key, true);
+   const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey, e.ctrlKey, e.altKey);
    if(hardware_keys.length === 0) return;
+
    keyboard_buffer.push({ type: "release", hardware_keys });
-   keyboard_buffer.push({ type: "release", hardware_keys: hardware_keys_unshifted });
+
+   // fix shift problem
+   key_pressed.forEach(k=>keyboard_buffer.push({ type: "release", hardware_keys: k }));
+   key_pressed = [];
+
    e.preventDefault();
 }
 
@@ -55,3 +59,6 @@ element.onkeydown = keyDown;
 element.onkeyup = keyUp;
 
 let keyboard_buffer = [];
+let key_pressed = [];
+
+

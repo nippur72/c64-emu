@@ -20,107 +20,101 @@
 
    */
 
-function pckey_to_hardware_keys_ITA(code, key, shift) {
+function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm) {
    //console.log(code, key, e);
    //console.log(e.getModifierState("ScrollLock"));
 
    let hardware_keys = [];
 
-   if(key === "1")             hardware_keys.push( "1".charCodeAt(0) );
-   if(key === "2")             hardware_keys.push( "2".charCodeAt(0) );
-   if(key === "3")             hardware_keys.push( "3".charCodeAt(0) );
-   if(key === "4")             hardware_keys.push( "4".charCodeAt(0) );
-   if(key === "5")             hardware_keys.push( "5".charCodeAt(0) );
-   if(key === "6")             hardware_keys.push( "6".charCodeAt(0) );
-   if(key === "7")             hardware_keys.push( "7".charCodeAt(0) );
-   if(key === "8")             hardware_keys.push( "8".charCodeAt(0) );
-   if(key === "9")             hardware_keys.push( "9".charCodeAt(0) );
-   if(key === "0")             hardware_keys.push( "0".charCodeAt(0) );
-
-   if(shift) {
-      if(code === "KeyQ")         hardware_keys.push( "q".charCodeAt(0) );
-      if(code === "KeyW")         hardware_keys.push( "w".charCodeAt(0) );
-      if(code === "KeyE")         hardware_keys.push( "e".charCodeAt(0) );
-      if(code === "KeyR")         hardware_keys.push( "r".charCodeAt(0) );
-      if(code === "KeyT")         hardware_keys.push( "t".charCodeAt(0) );
-      if(code === "KeyY")         hardware_keys.push( "y".charCodeAt(0) );
-      if(code === "KeyU")         hardware_keys.push( "u".charCodeAt(0) );
-      if(code === "KeyI")         hardware_keys.push( "i".charCodeAt(0) );
-      if(code === "KeyO")         hardware_keys.push( "o".charCodeAt(0) );
-      if(code === "KeyP")         hardware_keys.push( "p".charCodeAt(0) );
-      if(code === "KeyA")         hardware_keys.push( "a".charCodeAt(0) );
-      if(code === "KeyS")         hardware_keys.push( "s".charCodeAt(0) );
-      if(code === "KeyD")         hardware_keys.push( "d".charCodeAt(0) );
-      if(code === "KeyF")         hardware_keys.push( "f".charCodeAt(0) );
-      if(code === "KeyG")         hardware_keys.push( "g".charCodeAt(0) );
-      if(code === "KeyH")         hardware_keys.push( "h".charCodeAt(0) );
-      if(code === "KeyJ")         hardware_keys.push( "j".charCodeAt(0) );
-      if(code === "KeyK")         hardware_keys.push( "k".charCodeAt(0) );
-      if(code === "KeyL")         hardware_keys.push( "l".charCodeAt(0) );
-      if(code === "KeyZ")         hardware_keys.push( "z".charCodeAt(0) );
-      if(code === "KeyX")         hardware_keys.push( "x".charCodeAt(0) );
-      if(code === "KeyC")         hardware_keys.push( "c".charCodeAt(0) );
-      if(code === "KeyV")         hardware_keys.push( "v".charCodeAt(0) );
-      if(code === "KeyB")         hardware_keys.push( "b".charCodeAt(0) );
-      if(code === "KeyN")         hardware_keys.push( "n".charCodeAt(0) );
-      if(code === "KeyM")         hardware_keys.push( "m".charCodeAt(0) );
-   }
-   else {
-      if(code === "KeyQ")         hardware_keys.push( "Q".charCodeAt(0) );
-      if(code === "KeyW")         hardware_keys.push( "W".charCodeAt(0) );
-      if(code === "KeyE")         hardware_keys.push( "E".charCodeAt(0) );
-      if(code === "KeyR")         hardware_keys.push( "R".charCodeAt(0) );
-      if(code === "KeyT")         hardware_keys.push( "T".charCodeAt(0) );
-      if(code === "KeyY")         hardware_keys.push( "Y".charCodeAt(0) );
-      if(code === "KeyU")         hardware_keys.push( "U".charCodeAt(0) );
-      if(code === "KeyI")         hardware_keys.push( "I".charCodeAt(0) );
-      if(code === "KeyO")         hardware_keys.push( "O".charCodeAt(0) );
-      if(code === "KeyP")         hardware_keys.push( "P".charCodeAt(0) );
-      if(code === "KeyA")         hardware_keys.push( "A".charCodeAt(0) );
-      if(code === "KeyS")         hardware_keys.push( "S".charCodeAt(0) );
-      if(code === "KeyD")         hardware_keys.push( "D".charCodeAt(0) );
-      if(code === "KeyF")         hardware_keys.push( "F".charCodeAt(0) );
-      if(code === "KeyG")         hardware_keys.push( "G".charCodeAt(0) );
-      if(code === "KeyH")         hardware_keys.push( "H".charCodeAt(0) );
-      if(code === "KeyJ")         hardware_keys.push( "J".charCodeAt(0) );
-      if(code === "KeyK")         hardware_keys.push( "K".charCodeAt(0) );
-      if(code === "KeyL")         hardware_keys.push( "L".charCodeAt(0) );
-      if(code === "KeyZ")         hardware_keys.push( "Z".charCodeAt(0) );
-      if(code === "KeyX")         hardware_keys.push( "X".charCodeAt(0) );
-      if(code === "KeyC")         hardware_keys.push( "C".charCodeAt(0) );
-      if(code === "KeyV")         hardware_keys.push( "V".charCodeAt(0) );
-      if(code === "KeyB")         hardware_keys.push( "B".charCodeAt(0) );
-      if(code === "KeyN")         hardware_keys.push( "N".charCodeAt(0) );
-      if(code === "KeyM")         hardware_keys.push( "M".charCodeAt(0) );
-   }
-
-   if(key === "!")             hardware_keys.push( "!".charCodeAt(0) );
-   if(key === '"')             hardware_keys.push( '"'.charCodeAt(0) );
-   if(key === "£")             hardware_keys.push( "~".charCodeAt(0) );
-   if(key === "$")             hardware_keys.push( "$".charCodeAt(0) );
-   if(key === "%")             hardware_keys.push( "%".charCodeAt(0) );
-   if(key === "&")             hardware_keys.push( "&".charCodeAt(0) );
-   if(key === "/")             hardware_keys.push( "/".charCodeAt(0) );
-   if(key === "(")             hardware_keys.push( "(".charCodeAt(0) );
-   if(key === ")")             hardware_keys.push( ")".charCodeAt(0) );
-   if(key === "=")             hardware_keys.push( "=".charCodeAt(0) );
-   if(key === "'")             hardware_keys.push( "'".charCodeAt(0) );
-   if(key === "?")             hardware_keys.push( "?".charCodeAt(0) );
-   if(key === "^")             hardware_keys.push( "^".charCodeAt(0) );
-   if(key === "[")             hardware_keys.push( "[".charCodeAt(0) );
-   if(key === "]")             hardware_keys.push( "]".charCodeAt(0) );
-   if(key === "+")             hardware_keys.push( "+".charCodeAt(0) );
-   if(key === "*")             hardware_keys.push( "*".charCodeAt(0) );
-   if(key === "ç")             hardware_keys.push( "@".charCodeAt(0) );
-   if(key === "@")             hardware_keys.push( "@".charCodeAt(0) );
-   if(key === "#")             hardware_keys.push( "#".charCodeAt(0) );
-   if(key === "<")             hardware_keys.push( "<".charCodeAt(0) );
-   if(key === ">")             hardware_keys.push( ">".charCodeAt(0) );
-   if(key === ",")             hardware_keys.push( ",".charCodeAt(0) );
-   if(key === ";")             hardware_keys.push( ";".charCodeAt(0) );
-   if(key === ".")             hardware_keys.push( ".".charCodeAt(0) );
-   if(key === ":")             hardware_keys.push( ":".charCodeAt(0) );
-   if(key === "-")             hardware_keys.push( "-".charCodeAt(0) );
+   if(key === "1")         hardware_keys.push( "1".charCodeAt(0) );
+   if(key === "2")         hardware_keys.push( "2".charCodeAt(0) );
+   if(key === "3")         hardware_keys.push( "3".charCodeAt(0) );
+   if(key === "4")         hardware_keys.push( "4".charCodeAt(0) );
+   if(key === "5")         hardware_keys.push( "5".charCodeAt(0) );
+   if(key === "6")         hardware_keys.push( "6".charCodeAt(0) );
+   if(key === "7")         hardware_keys.push( "7".charCodeAt(0) );
+   if(key === "8")         hardware_keys.push( "8".charCodeAt(0) );
+   if(key === "9")         hardware_keys.push( "9".charCodeAt(0) );
+   if(key === "0")         hardware_keys.push( "0".charCodeAt(0) );
+   if(key === "!")         hardware_keys.push( "!".charCodeAt(0) );
+   if(key === '"')         hardware_keys.push( '"'.charCodeAt(0) );
+   if(key === "£")         hardware_keys.push( "~".charCodeAt(0) );
+   if(key === "$")         hardware_keys.push( "$".charCodeAt(0) );
+   if(key === "%")         hardware_keys.push( "%".charCodeAt(0) );
+   if(key === "&")         hardware_keys.push( "&".charCodeAt(0) );
+   if(key === "/")         hardware_keys.push( "/".charCodeAt(0) );
+   if(key === "(")         hardware_keys.push( "(".charCodeAt(0) );
+   if(key === ")")         hardware_keys.push( ")".charCodeAt(0) );
+   if(key === "=")         hardware_keys.push( "=".charCodeAt(0) );
+   if(key === "'")         hardware_keys.push( "'".charCodeAt(0) );
+   if(key === "?")         hardware_keys.push( "?".charCodeAt(0) );
+   if(key === "^")         hardware_keys.push( "^".charCodeAt(0) );
+   if(key === "[")         hardware_keys.push( "[".charCodeAt(0) );
+   if(key === "]")         hardware_keys.push( "]".charCodeAt(0) );
+   if(key === "+")         hardware_keys.push( "+".charCodeAt(0) );
+   if(key === "*")         hardware_keys.push( "*".charCodeAt(0) );
+   if(key === "ç")         hardware_keys.push( "@".charCodeAt(0) );
+   if(key === "@")         hardware_keys.push( "@".charCodeAt(0) );
+   if(key === "#")         hardware_keys.push( "#".charCodeAt(0) );
+   if(key === "<")         hardware_keys.push( "<".charCodeAt(0) );
+   if(key === ">")         hardware_keys.push( ">".charCodeAt(0) );
+   if(key === ",")         hardware_keys.push( ",".charCodeAt(0) );
+   if(key === ";")         hardware_keys.push( ";".charCodeAt(0) );
+   if(key === ".")         hardware_keys.push( ".".charCodeAt(0) );
+   if(key === ":")         hardware_keys.push( ":".charCodeAt(0) );
+   if(key === "-")         hardware_keys.push( "-".charCodeAt(0) );
+   if(key === "q")         hardware_keys.push( "q".toUpperCase().charCodeAt(0) );
+   if(key === "w")         hardware_keys.push( "w".toUpperCase().charCodeAt(0) );
+   if(key === "e")         hardware_keys.push( "e".toUpperCase().charCodeAt(0) );
+   if(key === "r")         hardware_keys.push( "r".toUpperCase().charCodeAt(0) );
+   if(key === "t")         hardware_keys.push( "t".toUpperCase().charCodeAt(0) );
+   if(key === "y")         hardware_keys.push( "y".toUpperCase().charCodeAt(0) );
+   if(key === "u")         hardware_keys.push( "u".toUpperCase().charCodeAt(0) );
+   if(key === "i")         hardware_keys.push( "i".toUpperCase().charCodeAt(0) );
+   if(key === "o")         hardware_keys.push( "o".toUpperCase().charCodeAt(0) );
+   if(key === "p")         hardware_keys.push( "p".toUpperCase().charCodeAt(0) );
+   if(key === "a")         hardware_keys.push( "a".toUpperCase().charCodeAt(0) );
+   if(key === "s")         hardware_keys.push( "s".toUpperCase().charCodeAt(0) );
+   if(key === "d")         hardware_keys.push( "d".toUpperCase().charCodeAt(0) );
+   if(key === "f")         hardware_keys.push( "f".toUpperCase().charCodeAt(0) );
+   if(key === "g")         hardware_keys.push( "g".toUpperCase().charCodeAt(0) );
+   if(key === "h")         hardware_keys.push( "h".toUpperCase().charCodeAt(0) );
+   if(key === "j")         hardware_keys.push( "j".toUpperCase().charCodeAt(0) );
+   if(key === "k")         hardware_keys.push( "k".toUpperCase().charCodeAt(0) );
+   if(key === "l")         hardware_keys.push( "l".toUpperCase().charCodeAt(0) );
+   if(key === "z")         hardware_keys.push( "z".toUpperCase().charCodeAt(0) );
+   if(key === "x")         hardware_keys.push( "x".toUpperCase().charCodeAt(0) );
+   if(key === "c")         hardware_keys.push( "c".toUpperCase().charCodeAt(0) );
+   if(key === "v")         hardware_keys.push( "v".toUpperCase().charCodeAt(0) );
+   if(key === "b")         hardware_keys.push( "b".toUpperCase().charCodeAt(0) );
+   if(key === "n")         hardware_keys.push( "n".toUpperCase().charCodeAt(0) );
+   if(key === "m")         hardware_keys.push( "m".toUpperCase().charCodeAt(0) );
+   if(key === "Q")         hardware_keys.push( "Q".toLowerCase().charCodeAt(0) );
+   if(key === "W")         hardware_keys.push( "W".toLowerCase().charCodeAt(0) );
+   if(key === "E")         hardware_keys.push( "E".toLowerCase().charCodeAt(0) );
+   if(key === "R")         hardware_keys.push( "R".toLowerCase().charCodeAt(0) );
+   if(key === "T")         hardware_keys.push( "T".toLowerCase().charCodeAt(0) );
+   if(key === "Y")         hardware_keys.push( "Y".toLowerCase().charCodeAt(0) );
+   if(key === "U")         hardware_keys.push( "U".toLowerCase().charCodeAt(0) );
+   if(key === "I")         hardware_keys.push( "I".toLowerCase().charCodeAt(0) );
+   if(key === "O")         hardware_keys.push( "O".toLowerCase().charCodeAt(0) );
+   if(key === "P")         hardware_keys.push( "P".toLowerCase().charCodeAt(0) );
+   if(key === "A")         hardware_keys.push( "A".toLowerCase().charCodeAt(0) );
+   if(key === "S")         hardware_keys.push( "S".toLowerCase().charCodeAt(0) );
+   if(key === "D")         hardware_keys.push( "D".toLowerCase().charCodeAt(0) );
+   if(key === "F")         hardware_keys.push( "F".toLowerCase().charCodeAt(0) );
+   if(key === "G")         hardware_keys.push( "G".toLowerCase().charCodeAt(0) );
+   if(key === "H")         hardware_keys.push( "H".toLowerCase().charCodeAt(0) );
+   if(key === "J")         hardware_keys.push( "J".toLowerCase().charCodeAt(0) );
+   if(key === "K")         hardware_keys.push( "K".toLowerCase().charCodeAt(0) );
+   if(key === "L")         hardware_keys.push( "L".toLowerCase().charCodeAt(0) );
+   if(key === "Z")         hardware_keys.push( "Z".toLowerCase().charCodeAt(0) );
+   if(key === "X")         hardware_keys.push( "X".toLowerCase().charCodeAt(0) );
+   if(key === "C")         hardware_keys.push( "C".toLowerCase().charCodeAt(0) );
+   if(key === "V")         hardware_keys.push( "V".toLowerCase().charCodeAt(0) );
+   if(key === "B")         hardware_keys.push( "B".toLowerCase().charCodeAt(0) );
+   if(key === "N")         hardware_keys.push( "N".toLowerCase().charCodeAt(0) );
+   if(key === "M")         hardware_keys.push( "M".toLowerCase().charCodeAt(0) );
 
    // FKEYS
    if(code === "F1")           hardware_keys.push( 0xF1 );
@@ -151,11 +145,16 @@ function pckey_to_hardware_keys_ITA(code, key, shift) {
    if(code === "Home")          hardware_keys.push( 0x05  );
    if(code === "Home" && shift) hardware_keys.push( 0x06  );
 
+   if(control) hardware_keys.push( 0x0E );  // emulate CTRL
+   if(cbm)     hardware_keys.push( 0x0F );  // emulate CBM
+
+   /*
    if(code === "ControlLeft")  hardware_keys.push( 0x0E );
    if(code === "ControlRight") hardware_keys.push( 0x0E );
    if(code === "Tab")          hardware_keys.push( 0x0E );  // emulate CTRL
    if(code === "AltLeft")      hardware_keys.push( 0x0F );  // emulate CBM
    if(code === "PageUp")       hardware_keys.push( 0xFF );  // emulate RESTORE
+   */
 
    return hardware_keys;
 }

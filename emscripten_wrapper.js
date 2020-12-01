@@ -28,6 +28,8 @@ function load_wasm(ready_cb) {
       c64.init     = instance.cwrap("sys_init", null);
       c64.config   = instance.cwrap("sys_config", null, ['number']);
       c64.exec     = instance.cwrap("sys_exec", null);
+      c64.ex       = instance.cwrap("sys_ex", ['number']);
+      c64.vdp      = instance.cwrap("sys_vdp", null);
       c64.reset    = instance.cwrap("sys_reset", null);
 
       c64.key_down = instance.cwrap("sys_key_down" , null, ['number'] );
