@@ -94,6 +94,9 @@ function main() {
 
    c64.config(0);
 
+   c64.ex(5000);     // wait for memory pattern writing
+   mem_write(204,1); // flags system not booted yet
+
    parseQueryStringCommands();
 
    // rom autoload

@@ -78,11 +78,18 @@ function loadBytes(bytes, address, fileName) {
 
    const load_address = (buffer[0] | buffer[1] << 8);
 
-   setTimeout(()=>do_load(buffer, bytes.length), 4000);
+   // setTimeout(()=>do_load(buffer, bytes.length), 4000);
+   wait_and_load(buffer, bytes.length);
+}
 
-   if(fileName === undefined) fileName = "autoload";
-   //console.log(`loaded "${fileName}" ${bytes.length} bytes from ${hex(startAddress,4)}h to ${hex(endAddress,4)}h`);
-   console.log(`loaded "${fileName}" ${bytes.length} bytes`);
+function wait_and_load(buffer, num_bytes) {
+   if(mem_read(204)!==0) {
+      // cursor not flashing, system not yet booted
+      setTimeout(()=>wait_and_load(buffer, num_bytes), 100);
+      return;
+   }
+   do_load(buffer, num_bytes);
+   console.log(`loaded ${num_bytes} bytes`);
 }
 
 function do_load(buffer, num_bytes) {
