@@ -131,3 +131,15 @@ paste(`
 30 if sstat(7)<>191 then print sstat(7)
 40 goto 20
 `)
+
+
+paste(`
+10 POKE 54296,15
+11 POKE 54296,15
+12 POKE 54273,20
+13 POKE 54277,0
+14 POKE 54278,249
+15 POKE 54276,17
+16 POKE 54276,16
+`)
+

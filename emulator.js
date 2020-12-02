@@ -106,9 +106,12 @@ function main() {
 
    // autostart terminal if loaded from bbs.sblendorio.ue
    let href = window.location.href;
-   if(href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g) && options.load === undefined) {
-      fetchProgram("nippur72/terminal.prg");
-   }
+   let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g);
+   let is_retroacademy = href.match(/^http:\/\/(bbs\.retroacademy\.it)/g);
+
+   if(is_retrocampus  && options.wstcp === undefined) wstcp_address = "wss://bbs.sblendorio.eu:8080";
+   if(is_retroacademy && options.wstcp === undefined) wstcp_address = "wss://bbs.sblendorio.eu:8081";
+   if((is_retroacademy || is_retrocampus) && options.load === undefined) fetchProgram("nippur72/terminal.prg");
 
    // starts drawing frames
    goAudio();
