@@ -10,47 +10,66 @@ const CHROUT = $FFD2
 
     org BASIC_RAM
 
-// fictional modem I/O port
-dim MODEM_DATA_OUT    as byte at $D7F2
-dim MODEM_DATA_IN     as byte at $D7F0
-dim MODEM_DATA_REQ    as byte at $D7F3
-dim MODEM_ACK         as byte at $D7F1
-dim MODEM_CONNST      as byte at $D7F4
+// porte del modem virtuale
+dim MODEM_DATA_OUT    as byte at $D7F2    ; caratteri da inviare
+dim MODEM_DATA_IN     as byte at $D7F0    ; caratteri in arrivo
+dim MODEM_DATA_REQ    as byte at $D7F3    ; 1 se ci sono caratteri in arrivo nel buffer
+dim MODEM_ACK         as byte at $D7F1    ; porta per l'handshake
+dim MODEM_CONNST      as byte at $D7F4    ; status del modem (0=connesso, <>0 disconnesso)
 
 basic start
-   10 print chr$(14)+"{white}{clr}";
+   10 poke 53280,0:poke 53281,0
+   20 poke 54296,15
+   30 print chr$(14)+"{white}{clr}";
    40 sys {terminal}
 basic end
 
 terminal:
+    ; controlla se ci sono caratteri da stampare nel buffer
     lda MODEM_DATA_REQ
     if a<>#0 then
         jsr cursor_off
         do
+            ; esci da modalità QUOTE e INS
             ldx #0
             stx $D4
             stx $D8
+
+            ; legge il carattere dal modem
             lda MODEM_DATA_IN
+
+            ; se è CHR$(7) emette il suono della campana
+            pha
+            if a==#7 then jsr term_bell
+            pla
+
+            ; stampa il carattere a video
             jsr CHROUT
+
+            ; notifica al modem che il carattere è stato ricevuto
             lda #0
             sta MODEM_ACK
             lda #1
             sta MODEM_ACK
+
+            ; controlla se ci sono altri caratteri da stampare nel buffer
             lda MODEM_DATA_REQ
         loop while not zero
         jsr cursor_on
     end if
 
+    ; legge un carattere da tastiera e lo manda al modem
     jsr GETIN
     if a<>#0 then sta MODEM_DATA_OUT
 
+    ; aggiorna il colore dello schermo con lo status del modem (nero/rosso)
     lda MODEM_CONNST
     sta 53280
     sta 53281
 
     jmp terminal
 
-; cursor on/off (C) Francesco Sblendorio
+; cursor on/off, term_bell (C) Francesco Sblendorio
 ; https://github.com/sblendorio/ultimateii-dos-lib/blob/master/src/samples/screen_utility.c
 
 cursor_on:
@@ -70,3 +89,12 @@ cursor_off:
 	ldy #$ff
 	sty $cc
     rts
+
+term_bell:
+	ld $D418, #15
+	ld $D401, #20
+	ld $D405, #0
+	ld $D406, #249
+	ld $D404, #17
+	ld $D404, #16
+	rts

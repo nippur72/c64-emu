@@ -31,19 +31,14 @@ c64_t sys;
 #define PIXBUFSIZE (641024) /*(392*272*4)*/
 unsigned char pixel_buffer[PIXBUFSIZE];
 
-#define AUDIOBUFSIZE (512)
-//float audio_buffer[AUDIOBUFSIZE];
+#define AUDIOBUFSIZE (1024)
 
 void audio_cb(const float* samples, int num_samples, void* user_data) {
-  // byte unused = (byte) EM_ASM_INT({ audio_buf_ready($0, $1); }, samples, num_samples );
+   byte unused = (byte) EM_ASM_INT({ audio_buf_ready($0, $1); }, samples, num_samples );
 }
 
-//int counter = 0;
 void end_frame_cb(void* user_data) {
-   //if((counter++ & 1) == 0) {
-      // draw every two frames
-      byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
-   //}
+   byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -55,13 +50,11 @@ void sys_init() {
    // video
    desc.pixel_buffer = pixel_buffer;                 /* pointer to a linear RGBA8 pixel buffer */
    desc.pixel_buffer_size = PIXBUFSIZE;              /* size of the pixel buffer in bytes */
-   //desc.end_frame_cb = end_frame_cb;
 
    // audio
    desc.audio_cb = audio_cb;                         /* called when audio_num_samples are ready */
-   //desc.audio_buffer = audio_buffer;
    desc.audio_num_samples = AUDIOBUFSIZE;
-   desc.audio_sample_rate = 44100;                   /* playback sample rate in Hz, default is 44100 */
+   desc.audio_sample_rate = 48000;
 
    // ROM images
    desc.rom_char = dump_c64_char_bin;
