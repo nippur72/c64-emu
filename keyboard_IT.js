@@ -20,7 +20,7 @@
 
    */
 
-function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm) {
+function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    //console.log(code, key, e);
    //console.log(e.getModifierState("ScrollLock"));
 
@@ -51,6 +51,8 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm) {
    if(key === "^")         hardware_keys.push( "^".charCodeAt(0) );
    if(key === "[")         hardware_keys.push( "[".charCodeAt(0) );
    if(key === "]")         hardware_keys.push( "]".charCodeAt(0) );
+   if(key === "°")         hardware_keys.push( "[".charCodeAt(0) );
+   if(key === "§")         hardware_keys.push( "]".charCodeAt(0) );
    if(key === "+")         hardware_keys.push( "+".charCodeAt(0) );
    if(key === "*")         hardware_keys.push( "*".charCodeAt(0) );
    if(key === "ç")         hardware_keys.push( "@".charCodeAt(0) );
@@ -116,6 +118,8 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm) {
    if(key === "N")         hardware_keys.push( "N".toLowerCase().charCodeAt(0) );
    if(key === "M")         hardware_keys.push( "M".toLowerCase().charCodeAt(0) );
 
+   if(key === "_")         { hardware_keys.push( 64); hardware_keys.push( 0x0F );  }  // simulate underscore
+
    // FKEYS
    if(code === "F1")           hardware_keys.push( 0xF1 );
    if(code === "F2")           hardware_keys.push( 0xF2 );
@@ -145,7 +149,7 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm) {
    if(code === "Home")          hardware_keys.push( 0x05  );
    if(code === "Home" && shift) hardware_keys.push( 0x06  );
 
-   if(control) hardware_keys.push( 0x0E );  // emulate CTRL
+   if(control && !altgraph) hardware_keys.push( 0x0E );  // emulate CTRL
    if(cbm)     hardware_keys.push( 0x0F );  // emulate CBM
 
    /*

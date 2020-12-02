@@ -1021,7 +1021,7 @@ static void _c64_init_key_map(c64_t* sys) {
         "7YG8BHUV"
         "9IJ0MKON"
         "+PL-.:@,"
-        "~*;  = /"  /* ~ is actually the British Pound sign */
+        "~*;  =^/"  /* ~ is actually the British Pound sign */
         "1  2  Q "
 
         /* shift */

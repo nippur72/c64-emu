@@ -30,10 +30,7 @@ let options = {
 
 // scanline version
 function renderLines() {
-   poll_keyboard(); c64.ex(5000);
-   poll_keyboard(); c64.ex(5000);
-   poll_keyboard(); c64.ex(5000);
-   poll_keyboard(); c64.ex(5000);
+   poll_keyboard(); c64.ex(20000);
    c64.vdp();
 }
 
