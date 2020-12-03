@@ -1,6 +1,10 @@
 (function () {
-  File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer;
-  Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer;
+  //File.prototype.arrayBuffer = File.prototype.arrayBuffer || myArrayBuffer;
+  //Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || myArrayBuffer;
+  // Safari 13 does not have arrayBuffer
+  // Firefox 83 has it but causes troubles (see bbs.js)
+  File.prototype.arrayBuffer = myArrayBuffer;
+  Blob.prototype.arrayBuffer = myArrayBuffer;
 
   function myArrayBuffer() {
     // this: File or Blob

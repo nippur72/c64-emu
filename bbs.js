@@ -75,16 +75,17 @@ function bbs() {
       modem_send_to_ws = undefined;
    };
 
-   ws_connection.onmessage = function(e) {
+   ws_connection.onmessage = async function(e) {
       if (typeof e.data === 'string') {
          console.log("Received string: '" + e.data + "'");
       }
       else {
-         e.data.arrayBuffer().then(data=>{
-            let bytes = new Uint8Array(data);
-            //console.log(`${bytes.length} bytes arrived`);
-            bytes.forEach(e=>modem_receive_buffer.push(e));
-         });
+         // note: this fails on FireFox 83 due to Blob.arrayBuffer()
+         // promise: the "await" results in bytes decoded
+         // but with wrong timestamp order. Solved with patch-arrayBuffer.js
+         let data = await e.data.arrayBuffer();
+         let bytes = new Uint8Array(data);
+         bytes.forEach(e=>modem_receive_buffer.push(e));
       }
    };
 
