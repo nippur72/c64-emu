@@ -17,7 +17,7 @@ dim MODEM_DATA_REQ    as byte at $D7F3    ; 1 se ci sono caratteri in arrivo nel
 dim MODEM_ACK         as byte at $D7F1    ; porta per l'handshake
 dim MODEM_CONNST      as byte at $D7F4    ; status del modem (0=connesso, <>0 disconnesso)
 
-basic start
+basic start compact
    2020 sys {main}
 basic end
 
