@@ -157,8 +157,9 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    if(code === "ControlRight") hardware_keys.push( 0x0E );
    if(code === "Tab")          hardware_keys.push( 0x0E );  // emulate CTRL
    if(code === "AltLeft")      hardware_keys.push( 0x0F );  // emulate CBM
-   if(code === "PageUp")       hardware_keys.push( 0xFF );  // emulate RESTORE
    */
+
+   if(code === "PageUp")       hardware_keys.push( 0xFF );  // emulate RESTORE
 
    return hardware_keys;
 }

@@ -665,6 +665,11 @@ void c64_joystick(c64_t* sys, uint8_t joy1_mask, uint8_t joy2_mask) {
 
 static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
 
+    // RESTORE key
+    if(sys->kbd.scanout_column_masks[8] & 1) {
+        pins |= M6502_NMI;  /* RESTORE key is pressed */
+    }
+
     /* FIXME: move datasette and floppy tick to end */
     if (sys->c1530.valid) {
         c1530_tick(&sys->c1530);
@@ -1071,6 +1076,8 @@ static void _c64_init_key_map(c64_t* sys) {
     kbd_register_key(&sys->kbd, 0xF6, 6, 0, 1);
     kbd_register_key(&sys->kbd, 0xF7, 3, 0, 0);
     kbd_register_key(&sys->kbd, 0xF8, 3, 0, 1);
+
+    kbd_register_key(&sys->kbd, 0xFF, 0, 8, 0);   /* restore key is mapped on the NMI */
 }
 
 void mem_write_word(c64_t* sys, uint16_t address, uint16_t value) {
