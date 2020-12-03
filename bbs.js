@@ -1,6 +1,7 @@
 //********************************************************************
 
 let modem_send_to_ws = undefined;
+let modem_close = undefined;
 
 let modem_transmit_buffer = [];
 let modem_receive_buffer = [];
@@ -99,6 +100,8 @@ function bbs() {
          console.log("BBS: can't send, BBS is disconnected");
       }
    };
+
+   modem_close = ()=> ws_connection.close();
 }
 
 function string2Array(str) {
