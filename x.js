@@ -143,3 +143,9 @@ paste(`
 16 POKE 54276,16
 `)
 
+for(let t=0;t<800*3;t++) {
+   modem_receive_buffer.push(65+t%40);
+}
+modem_receive_buffer.push(13);
+modem_receive_buffer.push(13);
+

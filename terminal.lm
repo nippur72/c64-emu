@@ -18,11 +18,16 @@ dim MODEM_ACK         as byte at $D7F1    ; porta per l'handshake
 dim MODEM_CONNST      as byte at $D7F4    ; status del modem (0=connesso, <>0 disconnesso)
 
 basic start
-   10 poke 53280,0:poke 53281,0
-   20 poke 54296,15
-   30 print chr$(14)+"{white}{clr}";
-   40 sys {terminal}
+   2020 sys {main}
 basic end
+
+main:
+    ld 53280, #0             ; black border
+    ld 53281, #0             ; black screen
+    ld 54296, #15            ; max volume
+    lda #14  : jsr CHROUT    ; lowercase
+    lda #147 : jsr CHROUT    ; clr
+    lda #5   : jsr CHROUT    ; white
 
 terminal:
     ; controlla se ci sono caratteri da stampare nel buffer
