@@ -8,457 +8,6 @@ MODEM_CONNST EQU $D7F4
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 GETIN   = $FFE4     
 CLRSCN  = $E544     
 PRNSTR  = $AB1E     
@@ -576,15 +125,11 @@ BASIC_ROW_0: BYTE [BASIC_ROW_1%256],[BASIC_ROW_1/256],[2020%256],[2020/256],158,
 BASIC_ROW_1: BYTE 0,0
 
 MAIN:
-    LDA #0
-    STA 53280
-
-    LDA #0
-    STA 53281
-
-    LDA #15
-    STA 54296
-
+    LDA #0   
+    STA 53280 
+    STA 53281 
+    LDA #15  
+    STA 54296     
     LDA #14  
     JSR CHROUT    
     LDA #147 
@@ -595,11 +140,11 @@ MAIN:
 TERMINAL:
     
     LDA MODEM_DATA_REQ
-IF_591_START:
+IF_136_START:
 	CMP #0
-	BEQ IF_591_ELSE
+	BEQ IF_136_ELSE
         JSR CURSOR_OFF
-DO_593_START:
+DO_138_START:
             
             LDX #0
             STX $D4
@@ -609,15 +154,13 @@ DO_593_START:
             LDA MODEM_DATA_IN
 
             
-            PHA
-IF_604_START:
+IF_148_START:
 	CMP #7
-	BNE IF_604_ELSE
+	BNE IF_148_ELSE
  JSR TERM_BELL 
-IF_604_ELSE:
-IF_604_END:
+IF_148_ELSE:
+IF_148_END:
  
-            PLA
 
             
             JSR CHROUT
@@ -630,21 +173,21 @@ IF_604_END:
 
             
             LDA MODEM_DATA_REQ
-	BNE DO_593_START
-DO_593_END:
+	BNE DO_138_START
+DO_138_END:
 
         JSR CURSOR_ON
-IF_591_ELSE:
-IF_591_END:
+IF_136_ELSE:
+IF_136_END:
 
     
     JSR GETIN
-IF_629_START:
+IF_172_START:
 	CMP #0
-	BEQ IF_629_ELSE
+	BEQ IF_172_ELSE
  STA MODEM_DATA_OUT 
-IF_629_ELSE:
-IF_629_END:
+IF_172_ELSE:
+IF_172_END:
  
 
     
@@ -664,39 +207,33 @@ CURSOR_ON:
 
 CURSOR_OFF:
    LDY $CC
-IF_651_START:
-	BNE IF_651_ELSE
+IF_194_START:
+	BNE IF_194_ELSE
         LDY #$01
         STY $CD
-DO_646_START:
+DO_189_START:
             LDY $CF
-	BNE DO_646_START
-DO_646_END:
+	BNE DO_189_START
+DO_189_END:
 
-IF_651_ELSE:
-IF_651_END:
+IF_194_ELSE:
+IF_194_END:
    LDY #$FF
    STY $CC
     RTS
 
 TERM_BELL:
-    LDA #15
-    STA $D418
-
-    LDA #20
-    STA $D401
-
-    LDA #0
-    STA $D405
-
-    LDA #249
-    STA $D406
-
-    LDA #17
-    STA $D404
-
-    LDA #16
-    STA $D404
-
+   LDY #15  
+    STY $D418
+   LDY #20  
+    STY $D401
+   LDY #0   
+    STY $D405
+   LDY #249 
+    STY $D406
+   LDY #17  
+    STY $D404
+   LDY #16  
+    STY $D404
    RTS
 

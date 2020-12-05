@@ -149,3 +149,11 @@ for(let t=0;t<800*3;t++) {
 modem_receive_buffer.push(13);
 modem_receive_buffer.push(13);
 
+async function test4() {
+   bbs();
+   await sleep(1000);
+   modem_send_to_ws(string2Array("T\r"));
+   await sleep(500);
+   modem_send_to_ws(string2Array("101\r"));
+}
+

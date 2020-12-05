@@ -144,6 +144,13 @@ function set(value, bitmask) {
    return value | bitmask; 
 }
 
+function sleep(msec) {
+   return new Promise((resolve,reject)=>{
+      setTimeout(()=>resolve(), msec);
+   });
+}
+
+
 function reset(value, bitmask) {
    return value & (0xFF ^ bitmask);
 }

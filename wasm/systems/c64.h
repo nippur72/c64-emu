@@ -852,12 +852,12 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
     }
     else if (modem_access) {
         if (pins & M6502_RW) {
-            /* modem read */
+            /* modem read: chiama la funzione JavaScript "modem_read(addr)" */
             byte data = (byte) EM_ASM_INT({ return modem_read($0); }, addr);
             M6502_SET_DATA(pins, data);
         }
         else {
-            /* modem write */
+            /* modem write: chiama la funzione JavaScript "modem_write(addr,data) */
             uint8_t data = M6502_GET_DATA(pins);
             byte unused = (byte) EM_ASM_INT({ modem_write($0,$1); }, addr, data );
         }

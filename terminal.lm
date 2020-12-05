@@ -1,7 +1,5 @@
    processor 6502
 
-include <macros.lm>
-include <macros_16.lm>
 include <c64.lm>
 
 // rom kernal entries
@@ -22,9 +20,8 @@ basic start compact
 basic end
 
 main:
-    ld 53280, #0             ; black border
-    ld 53281, #0             ; black screen
-    ld 54296, #15            ; max volume
+    lda #0   : sta 53280 : sta 53281 ; black screen
+    lda #15  : sta 54296     ; max volume
     lda #14  : jsr CHROUT    ; lowercase
     lda #147 : jsr CHROUT    ; clr
     lda #5   : jsr CHROUT    ; white
@@ -44,9 +41,7 @@ terminal:
             lda MODEM_DATA_IN
 
             ; se è CHR$(7) emette il suono della campana
-            pha
             if a==#7 then jsr term_bell
-            pla
 
             ; stampa il carattere a video
             jsr CHROUT
@@ -96,10 +91,10 @@ cursor_off:
     rts
 
 term_bell:
-	ld $D418, #15
-	ld $D401, #20
-	ld $D405, #0
-	ld $D406, #249
-	ld $D404, #17
-	ld $D404, #16
+	ldy #15  : sty $D418
+	ldy #20  : sty $D401
+	ldy #0   : sty $D405
+	ldy #249 : sty $D406
+	ldy #17  : sty $D404
+	ldy #16  : sty $D404
 	rts
