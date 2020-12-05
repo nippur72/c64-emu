@@ -37,7 +37,7 @@ onResize();
 // **** save state on close ****
 
 window.onbeforeunload = function(e) {
-   //saveState();
+   if(modem_close != undefined) modem_close();
  };
 
 // **** visibility change ****
