@@ -1,12 +1,8 @@
    processor 6502
 
-include <c64.lm>
-
-// rom kernal entries
+// routine del kernal
 const GETIN  = $FFE4
 const CHROUT = $FFD2
-
-    org BASIC_RAM
 
 // porte del modem virtuale
 dim MODEM_DATA_OUT    as byte at $D7F2    ; caratteri da inviare
@@ -14,6 +10,8 @@ dim MODEM_DATA_IN     as byte at $D7F0    ; caratteri in arrivo
 dim MODEM_DATA_REQ    as byte at $D7F3    ; 1 se ci sono caratteri in arrivo nel buffer
 dim MODEM_ACK         as byte at $D7F1    ; porta per l'handshake
 dim MODEM_CONNST      as byte at $D7F4    ; status del modem (0=connesso, <>0 disconnesso)
+
+    org 2049
 
 basic start compact
    2020 sys {main}
@@ -74,27 +72,27 @@ terminal:
 
 cursor_on:
     ldy #$00
-	sty $cc
+    sty $cc
     rts
 
 cursor_off:
-	ldy $cc
-	if zero then
+    ldy $cc
+    if zero then
         ldy #$01
         sty $cd
         do
             ldy $cf
         loop while not zero
     end if
-	ldy #$ff
-	sty $cc
+    ldy #$ff
+    sty $cc
     rts
 
 term_bell:
-	ldy #15  : sty $D418
-	ldy #20  : sty $D401
-	ldy #0   : sty $D405
-	ldy #249 : sty $D406
-	ldy #17  : sty $D404
-	ldy #16  : sty $D404
-	rts
+    ldy #15  : sty $D418
+    ldy #20  : sty $D401
+    ldy #0   : sty $D405
+    ldy #249 : sty $D406
+    ldy #17  : sty $D404
+    ldy #16  : sty $D404
+    rts

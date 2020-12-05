@@ -8,233 +8,132 @@
       7  08a4 ????				      PROCESSOR	6502
       8  08a4 ????
       9  08a4 ????
-     10  08a4 ????
-     11  08a4 ????	       ff e4	   GETIN      =	$FFE4
-     12  08a4 ????	       e5 44	   CLRSCN     =	$E544
-     13  08a4 ????	       ab 1e	   PRNSTR     =	$AB1E
-     14  08a4 ????	       e5 66	   GOHOME     =	$E566
-     15  08a4 ????	       bd cd	   PRNINT     =	$BDCD
-     16  08a4 ????
-     17  08a4 ????
-     18  08a4 ????
-     19  08a4 ????	       00 d1	   CURSOR_PTR =	209
-     20  08a4 ????	       00 a2	   JIFFY_CLOCK =	162
-     21  08a4 ????	       02 86	   CRSRCOL    =	646
-     22  08a4 ????	       00 01	   MEMORY_CONFIG =	1
-     23  08a4 ????
-     24  08a4 ????
-     25  08a4 ????
-     26  08a4 ????	       00 00	   COLOR_BLACK =	0
-     27  08a4 ????	       00 01	   COLOR_WHITE =	1
-     28  08a4 ????	       00 02	   COLOR_RED  =	2
-     29  08a4 ????	       00 03	   COLOR_CYAN =	3
-     30  08a4 ????	       00 04	   COLOR_MAGENTA =	4
-     31  08a4 ????	       00 05	   COLOR_GREEN =	5
-     32  08a4 ????	       00 06	   COLOR_BLUE =	6
-     33  08a4 ????	       00 07	   COLOR_YELLOW =	7
-     34  08a4 ????
-     35  08a4 ????
-     36  08a4 ????
-     37  08a4 ????
-     38  08a4 ????	       00 28	   SCREEN_COLS =	40
-     39  08a4 ????	       00 19	   SCREEN_ROWS =	25
-     40  08a4 ????	       04 00	   VIDEO_RAM  =	1024
-     41  08a4 ????	       d8 00	   COLOR_RAM  =	55296
-     42  08a4 ????	       00 d4	   COLOR_PAGE_OFFSET =	((COLOR_RAM - VIDEO_RAM) / 256)
-     43  08a4 ????	       08 01	   BASIC_RAM  =	2049
-     44  08a4 ????	       d0 12	   RASTER     =	$D012
-     45  08a4 ????	       d0 00	   ROMCHAR    =	$D000
-     46  08a4 ????	       d0 20	   BORDER     =	53280
-     47  08a4 ????	       d0 21	   BACKGROUND =	53281
-     48  08a4 ????
-     49  08a4 ????
-     50  08a4 ????
-     51  08a4 ????
-     52  08a4 ????
-     53  08a4 ????
-     54  08a4 ????
-     55  08a4 ????
-     56  08a4 ????
-     57  08a4 ????
-     58  08a4 ????
-     59  08a4 ????
-     60  08a4 ????
-     61  08a4 ????
-     62  08a4 ????
-     63  08a4 ????
-     64  08a4 ????
-     65  08a4 ????
-     66  08a4 ????
-     67  08a4 ????
-     68  08a4 ????
-     69  08a4 ????
-     70  08a4 ????
-     71  08a4 ????
-     72  08a4 ????
-     73  08a4 ????
-     74  08a4 ????
-     75  08a4 ????
-     76  08a4 ????
-     77  08a4 ????
-     78  08a4 ????
-     79  08a4 ????
-     80  08a4 ????
-     81  08a4 ????
-     82  08a4 ????
-     83  08a4 ????
-     84  08a4 ????
-     85  08a4 ????
-     86  08a4 ????
-     87  08a4 ????
-     88  08a4 ????
-     89  08a4 ????
-     90  08a4 ????
-     91  08a4 ????
-     92  08a4 ????
-     93  08a4 ????
-     94  08a4 ????
-     95  08a4 ????
-     96  08a4 ????
-     97  08a4 ????
-     98  08a4 ????
-     99  08a4 ????
-    100  08a4 ????
-    101  08a4 ????
-    102  08a4 ????
-    103  08a4 ????
-    104  08a4 ????
-    105  08a4 ????
-    106  08a4 ????
-    107  08a4 ????
-    108  08a4 ????
-    109  08a4 ????
-    110  08a4 ????
-    111  08a4 ????	       ff e4	   GETIN      =	$FFE4
-    112  08a4 ????	       ff d2	   CHROUT     =	$FFD2
-    113  08a4 ????
-    114  0801					      ORG	BASIC_RAM
-    115  0801
-    116  0801
-    117  0801
-    118  0801
-    119  0801
-    120  0801
-    121  0801
-    122  0801
-    123  0801
-    124  0801		       0c 08 e4 07*BASIC_ROW_0 BYTE.b	[BASIC_ROW_1%256],[BASIC_ROW_1/256],[2020%256],[2020/256],158,[[[MAIN%100000]-[MAIN%10000]]/10000+$30],[[[MAIN%10000]-[MAIN%1000]]/1000+$30],[[[MAIN%1000]-[MAIN%100]]/100+$30],[[[MAIN%100]-[MAIN%10]]/10+$30],[[[MAIN%10]-[MAIN%1]]/1+$30],0
-    125  080c		       00 00	   BASIC_ROW_1 BYTE.b	0,0
-    126  080e
-    127  080e				   MAIN
-    128  080e		       a9 00		      LDA	#0
-    129  0810		       8d 20 d0 	      STA	53280
-    130  0813		       8d 21 d0 	      STA	53281
-    131  0816		       a9 0f		      LDA	#15
-    132  0818		       8d 18 d4 	      STA	54296
-    133  081b		       a9 0e		      LDA	#14
-    134  081d		       20 d2 ff 	      JSR	CHROUT
-    135  0820		       a9 93		      LDA	#147
-    136  0822		       20 d2 ff 	      JSR	CHROUT
-    137  0825		       a9 05		      LDA	#5
-    138  0827		       20 d2 ff 	      JSR	CHROUT
-    139  082a
-    140  082a				   TERMINAL
-    141  082a
-    142  082a		       ad f3 d7 	      LDA	MODEM_DATA_REQ
-    143  082d				   IF_136_START
-    144  082d		       c9 00		      CMP	#0
-    145  082f		       f0 28		      BEQ	IF_136_ELSE
-    146  0831		       20 74 08 	      JSR	CURSOR_OFF
-    147  0834				   DO_138_START
-    148  0834
-    149  0834		       a2 00		      LDX	#0
-    150  0836		       86 d4		      STX	$D4
-    151  0838		       86 d8		      STX	$D8
-    152  083a
-    153  083a
-    154  083a		       ad f0 d7 	      LDA	MODEM_DATA_IN
-    155  083d
-    156  083d
-    157  083d				   IF_148_START
-    158  083d		       c9 07		      CMP	#7
-    159  083f		       d0 03		      BNE	IF_148_ELSE
-    160  0841		       20 85 08 	      JSR	TERM_BELL
-    161  0844				   IF_148_ELSE
-    162  0844				   IF_148_END
-    163  0844
-    164  0844
-    165  0844
-    166  0844		       20 d2 ff 	      JSR	CHROUT
-    167  0847
-    168  0847
-    169  0847		       a9 00		      LDA	#0
-    170  0849		       8d f1 d7 	      STA	MODEM_ACK
-    171  084c		       a9 01		      LDA	#1
-    172  084e		       8d f1 d7 	      STA	MODEM_ACK
-    173  0851
-    174  0851
-    175  0851		       ad f3 d7 	      LDA	MODEM_DATA_REQ
-    176  0854		       d0 de		      BNE	DO_138_START
-    177  0856				   DO_138_END
-    178  0856
-    179  0856		       20 6f 08 	      JSR	CURSOR_ON
-    180  0859				   IF_136_ELSE
-    181  0859				   IF_136_END
-    182  0859
-    183  0859
-    184  0859		       20 e4 ff 	      JSR	GETIN
-    185  085c				   IF_172_START
-    186  085c		       c9 00		      CMP	#0
-    187  085e		       f0 03		      BEQ	IF_172_ELSE
-    188  0860		       8d f2 d7 	      STA	MODEM_DATA_OUT
-    189  0863				   IF_172_ELSE
-    190  0863				   IF_172_END
-    191  0863
-    192  0863
-    193  0863
-    194  0863		       ad f4 d7 	      LDA	MODEM_CONNST
-    195  0866		       8d 20 d0 	      STA	53280
-    196  0869		       8d 21 d0 	      STA	53281
-    197  086c
-    198  086c		       4c 2a 08 	      JMP	TERMINAL
-    199  086f
-    200  086f
-    201  086f
-    202  086f
-    203  086f				   CURSOR_ON
-    204  086f		       a0 00		      LDY	#$00
-    205  0871		       84 cc		      STY	$CC
-    206  0873		       60		      RTS
-    207  0874
-    208  0874				   CURSOR_OFF
-    209  0874		       a4 cc		      LDY	$CC
-    210  0876				   IF_194_START
-    211  0876		       d0 08		      BNE	IF_194_ELSE
-    212  0878		       a0 01		      LDY	#$01
-    213  087a		       84 cd		      STY	$CD
-    214  087c				   DO_189_START
-    215  087c		       a4 cf		      LDY	$CF
-    216  087e		       d0 fc		      BNE	DO_189_START
-    217  0880				   DO_189_END
-    218  0880
-    219  0880				   IF_194_ELSE
-    220  0880				   IF_194_END
-    221  0880		       a0 ff		      LDY	#$FF
-    222  0882		       84 cc		      STY	$CC
-    223  0884		       60		      RTS
-    224  0885
-    225  0885				   TERM_BELL
-    226  0885		       a0 0f		      LDY	#15
-    227  0887		       8c 18 d4 	      STY	$D418
-    228  088a		       a0 14		      LDY	#20
-    229  088c		       8c 01 d4 	      STY	$D401
-    230  088f		       a0 00		      LDY	#0
-    231  0891		       8c 05 d4 	      STY	$D405
-    232  0894		       a0 f9		      LDY	#249
-    233  0896		       8c 06 d4 	      STY	$D406
-    234  0899		       a0 11		      LDY	#17
-    235  089b		       8c 04 d4 	      STY	$D404
-    236  089e		       a0 10		      LDY	#16
-    237  08a0		       8c 04 d4 	      STY	$D404
-    238  08a3		       60		      RTS
-    239  08a4
+     10  08a4 ????	       ff e4	   GETIN      =	$FFE4
+     11  08a4 ????	       ff d2	   CHROUT     =	$FFD2
+     12  08a4 ????
+     13  0801					      ORG	2049
+     14  0801
+     15  0801
+     16  0801
+     17  0801
+     18  0801
+     19  0801
+     20  0801
+     21  0801
+     22  0801
+     23  0801		       0c 08 e4 07*BASIC_ROW_0 BYTE.b	[BASIC_ROW_1%256],[BASIC_ROW_1/256],[2020%256],[2020/256],158,[[[MAIN%100000]-[MAIN%10000]]/10000+$30],[[[MAIN%10000]-[MAIN%1000]]/1000+$30],[[[MAIN%1000]-[MAIN%100]]/100+$30],[[[MAIN%100]-[MAIN%10]]/10+$30],[[[MAIN%10]-[MAIN%1]]/1+$30],0
+     24  080c		       00 00	   BASIC_ROW_1 BYTE.b	0,0
+     25  080e
+     26  080e				   MAIN
+     27  080e		       a9 00		      LDA	#0
+     28  0810		       8d 20 d0 	      STA	53280
+     29  0813		       8d 21 d0 	      STA	53281
+     30  0816		       a9 0f		      LDA	#15
+     31  0818		       8d 18 d4 	      STA	54296
+     32  081b		       a9 0e		      LDA	#14
+     33  081d		       20 d2 ff 	      JSR	CHROUT
+     34  0820		       a9 93		      LDA	#147
+     35  0822		       20 d2 ff 	      JSR	CHROUT
+     36  0825		       a9 05		      LDA	#5
+     37  0827		       20 d2 ff 	      JSR	CHROUT
+     38  082a
+     39  082a				   TERMINAL
+     40  082a
+     41  082a		       ad f3 d7 	      LDA	MODEM_DATA_REQ
+     42  082d				   IF_35_START
+     43  082d		       c9 00		      CMP	#0
+     44  082f		       f0 28		      BEQ	IF_35_ELSE
+     45  0831		       20 74 08 	      JSR	CURSOR_OFF
+     46  0834				   DO_37_START
+     47  0834
+     48  0834		       a2 00		      LDX	#0
+     49  0836		       86 d4		      STX	$D4
+     50  0838		       86 d8		      STX	$D8
+     51  083a
+     52  083a
+     53  083a		       ad f0 d7 	      LDA	MODEM_DATA_IN
+     54  083d
+     55  083d
+     56  083d				   IF_47_START
+     57  083d		       c9 07		      CMP	#7
+     58  083f		       d0 03		      BNE	IF_47_ELSE
+     59  0841		       20 85 08 	      JSR	TERM_BELL
+     60  0844				   IF_47_ELSE
+     61  0844				   IF_47_END
+     62  0844
+     63  0844
+     64  0844
+     65  0844		       20 d2 ff 	      JSR	CHROUT
+     66  0847
+     67  0847
+     68  0847		       a9 00		      LDA	#0
+     69  0849		       8d f1 d7 	      STA	MODEM_ACK
+     70  084c		       a9 01		      LDA	#1
+     71  084e		       8d f1 d7 	      STA	MODEM_ACK
+     72  0851
+     73  0851
+     74  0851		       ad f3 d7 	      LDA	MODEM_DATA_REQ
+     75  0854		       d0 de		      BNE	DO_37_START
+     76  0856				   DO_37_END
+     77  0856
+     78  0856		       20 6f 08 	      JSR	CURSOR_ON
+     79  0859				   IF_35_ELSE
+     80  0859				   IF_35_END
+     81  0859
+     82  0859
+     83  0859		       20 e4 ff 	      JSR	GETIN
+     84  085c				   IF_71_START
+     85  085c		       c9 00		      CMP	#0
+     86  085e		       f0 03		      BEQ	IF_71_ELSE
+     87  0860		       8d f2 d7 	      STA	MODEM_DATA_OUT
+     88  0863				   IF_71_ELSE
+     89  0863				   IF_71_END
+     90  0863
+     91  0863
+     92  0863
+     93  0863		       ad f4 d7 	      LDA	MODEM_CONNST
+     94  0866		       8d 20 d0 	      STA	53280
+     95  0869		       8d 21 d0 	      STA	53281
+     96  086c
+     97  086c		       4c 2a 08 	      JMP	TERMINAL
+     98  086f
+     99  086f
+    100  086f
+    101  086f
+    102  086f				   CURSOR_ON
+    103  086f		       a0 00		      LDY	#$00
+    104  0871		       84 cc		      STY	$CC
+    105  0873		       60		      RTS
+    106  0874
+    107  0874				   CURSOR_OFF
+    108  0874		       a4 cc		      LDY	$CC
+    109  0876				   IF_93_START
+    110  0876		       d0 08		      BNE	IF_93_ELSE
+    111  0878		       a0 01		      LDY	#$01
+    112  087a		       84 cd		      STY	$CD
+    113  087c				   DO_88_START
+    114  087c		       a4 cf		      LDY	$CF
+    115  087e		       d0 fc		      BNE	DO_88_START
+    116  0880				   DO_88_END
+    117  0880
+    118  0880				   IF_93_ELSE
+    119  0880				   IF_93_END
+    120  0880		       a0 ff		      LDY	#$FF
+    121  0882		       84 cc		      STY	$CC
+    122  0884		       60		      RTS
+    123  0885
+    124  0885				   TERM_BELL
+    125  0885		       a0 0f		      LDY	#15
+    126  0887		       8c 18 d4 	      STY	$D418
+    127  088a		       a0 14		      LDY	#20
+    128  088c		       8c 01 d4 	      STY	$D401
+    129  088f		       a0 00		      LDY	#0
+    130  0891		       8c 05 d4 	      STY	$D405
+    131  0894		       a0 f9		      LDY	#249
+    132  0896		       8c 06 d4 	      STY	$D406
+    133  0899		       a0 11		      LDY	#17
+    134  089b		       8c 04 d4 	      STY	$D404
+    135  089e		       a0 10		      LDY	#16
+    136  08a0		       8c 04 d4 	      STY	$D404
+    137  08a3		       60		      RTS
+    138  08a4

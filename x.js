@@ -155,5 +155,6 @@ async function test4() {
    modem_send_to_ws(string2Array("T\r"));
    await sleep(500);
    modem_send_to_ws(string2Array("101\r"));
+   await sleep(200);
 }
 

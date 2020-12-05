@@ -7,111 +7,10 @@ MODEM_CONNST EQU $D7F4
    PROCESSOR 6502
 
 
-
-GETIN   = $FFE4     
-CLRSCN  = $E544     
-PRNSTR  = $AB1E     
-GOHOME  = $E566     
-PRNINT  = $BDCD     
-
-
-
-CURSOR_PTR  = 209
-JIFFY_CLOCK = 162
-CRSRCOL     = 646
-MEMORY_CONFIG = 1
-
-
-
-COLOR_BLACK   = 0
-COLOR_WHITE   = 1
-COLOR_RED     = 2
-COLOR_CYAN    = 3
-COLOR_MAGENTA = 4
-COLOR_GREEN   = 5
-COLOR_BLUE    = 6
-COLOR_YELLOW  = 7
-
-
-
-
-SCREEN_COLS = 40
-SCREEN_ROWS = 25
-VIDEO_RAM = 1024
-COLOR_RAM =  55296
-COLOR_PAGE_OFFSET =  ((COLOR_RAM - VIDEO_RAM) / 256)
-BASIC_RAM = 2049
-RASTER =  $D012
-ROMCHAR =  $D000
-BORDER =  53280
-BACKGROUND =  53281
-
-
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 GETIN =  $FFE4
 CHROUT =  $FFD2
 
-    ORG BASIC_RAM
+    ORG 2049
 
 
 
@@ -140,11 +39,11 @@ MAIN:
 TERMINAL:
     
     LDA MODEM_DATA_REQ
-IF_136_START:
+IF_35_START:
 	CMP #0
-	BEQ IF_136_ELSE
+	BEQ IF_35_ELSE
         JSR CURSOR_OFF
-DO_138_START:
+DO_37_START:
             
             LDX #0
             STX $D4
@@ -154,12 +53,12 @@ DO_138_START:
             LDA MODEM_DATA_IN
 
             
-IF_148_START:
+IF_47_START:
 	CMP #7
-	BNE IF_148_ELSE
+	BNE IF_47_ELSE
  JSR TERM_BELL 
-IF_148_ELSE:
-IF_148_END:
+IF_47_ELSE:
+IF_47_END:
  
 
             
@@ -173,21 +72,21 @@ IF_148_END:
 
             
             LDA MODEM_DATA_REQ
-	BNE DO_138_START
-DO_138_END:
+	BNE DO_37_START
+DO_37_END:
 
         JSR CURSOR_ON
-IF_136_ELSE:
-IF_136_END:
+IF_35_ELSE:
+IF_35_END:
 
     
     JSR GETIN
-IF_172_START:
+IF_71_START:
 	CMP #0
-	BEQ IF_172_ELSE
+	BEQ IF_71_ELSE
  STA MODEM_DATA_OUT 
-IF_172_ELSE:
-IF_172_END:
+IF_71_ELSE:
+IF_71_END:
  
 
     
@@ -202,38 +101,38 @@ IF_172_END:
 
 CURSOR_ON:
     LDY #$00
-   STY $CC
+    STY $CC
     RTS
 
 CURSOR_OFF:
-   LDY $CC
-IF_194_START:
-	BNE IF_194_ELSE
+    LDY $CC
+IF_93_START:
+	BNE IF_93_ELSE
         LDY #$01
         STY $CD
-DO_189_START:
+DO_88_START:
             LDY $CF
-	BNE DO_189_START
-DO_189_END:
+	BNE DO_88_START
+DO_88_END:
 
-IF_194_ELSE:
-IF_194_END:
-   LDY #$FF
-   STY $CC
+IF_93_ELSE:
+IF_93_END:
+    LDY #$FF
+    STY $CC
     RTS
 
 TERM_BELL:
-   LDY #15  
+    LDY #15  
     STY $D418
-   LDY #20  
+    LDY #20  
     STY $D401
-   LDY #0   
+    LDY #0   
     STY $D405
-   LDY #249 
+    LDY #249 
     STY $D406
-   LDY #17  
+    LDY #17  
     STY $D404
-   LDY #16  
+    LDY #16  
     STY $D404
-   RTS
+    RTS
 
