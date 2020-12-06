@@ -1061,13 +1061,17 @@ static void _c64_init_key_map(c64_t* sys) {
     kbd_register_key(&sys->kbd, 0x0A, 7, 0, 0);    /* cursor down */
     kbd_register_key(&sys->kbd, 0x0B, 7, 0, 1);    /* cursor up */
     kbd_register_key(&sys->kbd, 0x01, 0, 0, 0);    /* delete */
-    kbd_register_key(&sys->kbd, 0x0C, 3, 6, 1);    /* clear */
+    kbd_register_key(&sys->kbd, 0x10, 0, 0, 1);    /* ins */
+    kbd_register_key(&sys->kbd, 0x0C, 3, 6, 0);    /* home */
+    kbd_register_key(&sys->kbd, 0x02, 3, 6, 1);    /* clear */
     kbd_register_key(&sys->kbd, 0x0D, 1, 0, 0);    /* return */
 
     kbd_register_key(&sys->kbd, 0x0E, 2, 7, 0);    /* ctrl */
     kbd_register_key(&sys->kbd, 0x0F, 5, 7, 0);    /* cbm */
-
     kbd_register_key(&sys->kbd, 0x03, 7, 7, 0);    /* stop */
+    kbd_register_key(&sys->kbd, 0x07, 7, 7, 1);    /* shift+run stop */
+    kbd_register_key(&sys->kbd, 0x04, 1, 7, 0);    /* left arrow */
+
     kbd_register_key(&sys->kbd, 0xF1, 4, 0, 0);
     kbd_register_key(&sys->kbd, 0xF2, 4, 0, 1);
     kbd_register_key(&sys->kbd, 0xF3, 5, 0, 0);

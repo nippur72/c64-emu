@@ -39,6 +39,7 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    if(key === "!")         hardware_keys.push( "!".charCodeAt(0) );
    if(key === '"')         hardware_keys.push( '"'.charCodeAt(0) );
    if(key === "£")         hardware_keys.push( "~".charCodeAt(0) );
+   if(key === "#")         hardware_keys.push( "#".charCodeAt(0) );
    if(key === "$")         hardware_keys.push( "$".charCodeAt(0) );
    if(key === "%")         hardware_keys.push( "%".charCodeAt(0) );
    if(key === "&")         hardware_keys.push( "&".charCodeAt(0) );
@@ -137,20 +138,26 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    if(code === "ArrowUp")      hardware_keys.push( 0x0b  );
 
    if(code === "Delete")       hardware_keys.push( 0x01  );
-   if(code === "Insert")       hardware_keys.push( 0x07  );
+   if(code === "Insert")       hardware_keys.push( 0x10  );
 
-   if(code === "Backspace" &&  shift) hardware_keys.push( 0x07  );
+   if(code === "Backspace" &&  shift) hardware_keys.push( 0x10  );
    if(code === "Backspace" && !shift) hardware_keys.push( 0x01  );
 
    if(code === "Enter")        hardware_keys.push( 0x0D  );
-   if(code === "Escape")       hardware_keys.push( 0x03  );  // run stop
-   if(code === "Backquote")    hardware_keys.push( 0x04  );  // left arrow
+   if(code === "NumpadEnter")  hardware_keys.push( 0x0D  );
 
-   if(code === "Home")          hardware_keys.push( 0x05  );
-   if(code === "Home" && shift) hardware_keys.push( 0x06  );
+   if(code === "Escape")          hardware_keys.push( 0x03  );  // run stop
+   if(code === "Escape" && shift) hardware_keys.push( 0x07  );  // shift + run stop
+
+   if(code === "Home")          hardware_keys.push( 0x0C  );
+   if(code === "Home" && shift) hardware_keys.push( 0x02  );
+
+   if(code === "Backquote")     hardware_keys.push( 0x04  );  // left arrow
 
    if(control && !altgraph) hardware_keys.push( 0x0E );  // emulate CTRL
    if(cbm)     hardware_keys.push( 0x0F );  // emulate CBM
+
+   if(code === "End")          hardware_keys.push( "@".charCodeAt(0) );
 
    /*
    if(code === "ControlLeft")  hardware_keys.push( 0x0E );
@@ -160,6 +167,7 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    */
 
    if(code === "PageUp")       hardware_keys.push( 0xFF );  // emulate RESTORE
+   if(code === "PageDown")     hardware_keys.push( 35 );    // "#"
 
    return hardware_keys;
 }
