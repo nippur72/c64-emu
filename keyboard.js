@@ -4,11 +4,7 @@ let last_scroll_lock = undefined;
 function keyDown(e) {
 
    // from Chrome 71 audio is suspended by default and must resume within an user-generated event
-   try {
-     audioContextResume();
-   } catch (e) {
-     // do nothing
-   }
+   audioContextResume();
 
    if(last_scroll_lock === undefined) last_scroll_lock = e.getModifierState("ScrollLock");
 

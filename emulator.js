@@ -111,7 +111,7 @@ function main() {
    if((is_retroacademy || is_retrocampus) && options.load === undefined) fetchProgram("nippur72/terminal.prg");
 
    // starts drawing frames
-   goAudio();
+   //goAudio();
    oneFrame();
 
    bbs();

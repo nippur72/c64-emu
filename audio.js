@@ -14,10 +14,38 @@ function audio_buf_ready(ptr, size) {
 
 // ********************************* AUDIO BUFFER TO BROWSER AUDIO ************************************
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const bufferSize = AUDIO_BUFSIZE;
-const sampleRate = audioContext.sampleRate;
-var speakerSound = audioContext.createScriptProcessor(bufferSize, 1, 1);
+
+let audioContext = undefined;
+let sampleRate;
+let speakerSound;
+
+function createAudioContext() {
+   audioContext = new (window.AudioContext || window.webkitAudioContext)();
+   sampleRate = audioContext.sampleRate;
+   speakerSound = audioContext.createScriptProcessor(bufferSize, 1, 1);
+
+   speakerSound.onaudioprocess = function(e) {
+      const output = e.outputBuffer.getChannelData(0);
+
+      if(audio_buffers_queue.length === 0) {
+         // console.log("warning: audio queue is empty");
+         return;
+      }
+      else if(audio_buffers_queue.length > 10) {
+         // console.log(`warning: audio queue is getting longer: ${audio_buffers_queue.length}`);
+         audio_buffers_queue = [];
+         return;
+      }
+
+      const buffer = audio_buffers_queue[0];
+      audio_buffers_queue = audio_buffers_queue.slice(1);
+
+      for(let i=0; i<bufferSize; i++) {
+         output[i] = buffer[i];
+      }
+   }
+}
 
 /*
 let ch0 = [];
@@ -37,45 +65,28 @@ function csave() {
 }
 */
 
-speakerSound.onaudioprocess = function(e) {
-   const output = e.outputBuffer.getChannelData(0);
-
-   if(audio_buffers_queue.length === 0) {
-      // console.log("warning: audio queue is empty");
-      return;
-   }
-   else if(audio_buffers_queue.length > 10) {
-      // console.log(`warning: audio queue is getting longer: ${audio_buffers_queue.length}`);
-      audio_buffers_queue = [];
-      return;
-   }
-
-   const buffer = audio_buffers_queue[0];
-   audio_buffers_queue = audio_buffers_queue.slice(1);
-
-   for(let i=0; i<bufferSize; i++) {
-      output[i] = buffer[i];
-   }
-}
-
-let audio_playing = false;
+let audio_playing = undefined;
 
 function goAudio() {
+   if(audioContext === undefined) createAudioContext();
    speakerSound.connect(audioContext.destination);
    audio_playing = true;
    audio_buffers_queue = [];
 }
 
 function stopAudio() {
+   if(audioContext === undefined) createAudioContext();
    speakerSound.disconnect(audioContext.destination);
    audio_playing = false;
 }
 
-function audioContextResume() {
+async function audioContextResume() {
+   if(audioContext === undefined) createAudioContext();
+   if(audio_playing === undefined) goAudio();
+
    if(audioContext.state === 'suspended') {
-      audioContext.resume().then(() => {
-        audio_buffers_queue = [];
-        // console.log('sound playback resumed successfully');
-      });
+      await audioContext.resume();
+      audio_buffers_queue = [];
    }
 }
+
