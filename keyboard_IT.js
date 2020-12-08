@@ -155,16 +155,17 @@ function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
    if(code === "Backquote")     hardware_keys.push( 0x04  );  // left arrow
 
    if(control && !altgraph) hardware_keys.push( 0x0E );  // emulate CTRL
-   if(cbm)     hardware_keys.push( 0x0F );  // emulate CBM
+   //if(cbm)                  hardware_keys.push( 0x0F );  // emulate CBM
 
    if(code === "End")          hardware_keys.push( "@".charCodeAt(0) );
 
    /*
-   if(code === "ControlLeft")  hardware_keys.push( 0x0E );
    if(code === "ControlRight") hardware_keys.push( 0x0E );
    if(code === "Tab")          hardware_keys.push( 0x0E );  // emulate CTRL
-   if(code === "AltLeft")      hardware_keys.push( 0x0F );  // emulate CBM
    */
+
+   if(code === "ControlLeft" && !altgraph)  hardware_keys.push( 0x0E );  // emulate CTRL
+   if(code === "AltLeft")                   hardware_keys.push( 0x0F );  // emulate CBM
 
    if(code === "PageUp")       hardware_keys.push( 0xFF );  // emulate RESTORE
    if(code === "PageDown")     hardware_keys.push( 35 );    // "#"

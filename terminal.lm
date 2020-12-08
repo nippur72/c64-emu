@@ -45,6 +45,7 @@ terminal:
             jsr CHROUT
 
             ; notifica al modem che il carattere è stato ricevuto
+            ; TODO riscrivere unsando il pin SYNC della CPU
             lda #0
             sta MODEM_ACK
             lda #1

@@ -22,7 +22,7 @@ function keyDown(e) {
       return;
    }   
 
-   // *** special (non characters) keys ***   
+   // *** special (non characters) keys ***
 
    // RESET key is CTRL+ALT+BREAK
    if(e.code === "Pause" && e.altKey && e.ctrlKey) {
@@ -38,6 +38,7 @@ function keyDown(e) {
       keyboard_buffer.push({ type: "press", hardware_keys });
       //key_pressed.push(hardware_keys);
       key_press_map[e.code] = hardware_keys;
+      //console.log(`map after press: ${Object.keys(key_press_map).join(",")}`);
       e.preventDefault();
    }
 }
@@ -54,12 +55,13 @@ function keyUp(e) {
    //key_pressed = [];
 
    let code = e.code;
+   //console.log(`map before release: ${Object.keys(key_press_map).join(",")}`);
 
    // fix shift problem
    if(key_press_map[code] !== undefined) {
       k = key_press_map[code];
       keyboard_buffer.push({ type: "release", hardware_keys: k });
-      key_press_map[code] = undefined;
+      delete key_press_map[code];
    }
 
    e.preventDefault();
@@ -85,6 +87,10 @@ function accentate(key) {
    keyUp(fakeEvent("'"));
 }
 
+window.onfocus = function() {
+   reset_keyboard(); // release all keys to prevent ALT always pressed after ALT+TAB
+}
+
 function fakeEvent(key) {
    return {
       key: key,
@@ -102,3 +108,15 @@ let keyboard_buffer = [];
 let key_press_map = {};
 
 
+function reset_keyboard() {
+
+   let keys = Object.keys(key_press_map);
+
+   keys.forEach(k=>{
+      //console.log(`clearing ${k}`);
+      keyboard_buffer.push({ type: "release", hardware_keys: key_press_map[k] });
+      delete key_press_map[k];
+   });
+
+   key_press_map = {};
+}
