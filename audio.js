@@ -75,9 +75,10 @@ function goAudio() {
 }
 
 function stopAudio() {
-   if(audioContext === undefined) createAudioContext();
-   speakerSound.disconnect(audioContext.destination);
-   audio_playing = false;
+   if(audio_playing !== undefined && audio_playing === true) {
+      speakerSound.disconnect(audioContext.destination);
+      audio_playing = false;
+   }
 }
 
 async function audioContextResume() {
