@@ -872,6 +872,7 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             mem_wr(&sys->mem_cpu, addr, M6502_GET_DATA(pins));
         }
     }
+
     return pins;
 }
 
