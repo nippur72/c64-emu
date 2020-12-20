@@ -11,7 +11,7 @@ function keyDown(e) {
    if(e.getModifierState("ScrollLock")!=last_scroll_lock) {
       let scroll_lock_key_pressed = e.getModifierState("ScrollLock");
       last_scroll_lock = scroll_lock_key_pressed;
-      let emu_joystick = scroll_lock_key_pressed ? 1 : 0;
+      let emu_joystick = scroll_lock_key_pressed ? 3 : 0;
       c64.emu_joy(emu_joystick);
       console.log(`Joystick emulation ${emu_joystick==1?"enabled":"disabled"}`);
    }

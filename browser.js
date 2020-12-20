@@ -119,7 +119,7 @@ async function parseQueryStringCommands() {
 
    if(options.joy !== undefined) {
       c64.emu_joy(options.joy);
-      console.log(`Joystick emulation ${options.joy==1?"enabled":"disabled"}`);
+      console.log(`Joystick emulation ${options.joy!=0?"enabled":"disabled"}`);
    }
 
    if(options.b !== undefined) {

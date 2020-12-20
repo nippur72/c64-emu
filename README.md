@@ -15,7 +15,7 @@ Open the emulator directly in your browser: [c64-emu](https://nippur72.github.io
 QUERYSTRING OPTIONS
 ===================
 - `wstcp=address:port` websocket address and port of the websocket tcp tunnel service
-- `joy=1` emulates joystick
+- `joy=3` emulates joystick
 - `load=program.prg` loads and exectutes a program
 - `b=<....>` loads the specified string as a base64 binary encoded file (created with the function `makeBase64())`
 
