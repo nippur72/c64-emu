@@ -127,9 +127,9 @@ function go() {
    console.log("emulation resumed");
 }
 
-function info() { 
-   const average = averageFrameTime; /* oneFrameTimeSum/frames; */
-   console.log(`frame rendering: min ${Math.round(minFrameTime*10,2)/10} ms (load=${Math.round(minFrameTime/frameDuration*100*10,2)/10} %) average ${Math.round(average*10,2)/10} ms (${Math.round(average/frameDuration*100*10,2)/10} %)`);   
+function info() {
+   const average = averageFrameTime/1000;
+   console.log(`frame rate: average ${Math.round(average*10,2)/10} ms (${Math.round(1/average*1000)} Hz)`);
 }
 
 function set_bit(value, bitn) {

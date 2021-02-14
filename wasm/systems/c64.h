@@ -327,6 +327,8 @@ typedef struct {
                                    at least 512*312*4 bytes, or ask via c64_max_display_size() */
     int pixel_buffer_size;      /* size of the pixel buffer in bytes */
 
+    m6569_end_frame_t end_frame_cb;  /* end of frame callback */
+
     /* optional user-data for callback functions */
     void* user_data;
 
@@ -505,6 +507,7 @@ void c64_init(c64_t* sys, const c64_desc_t* desc) {
     m6569_desc_t vic_desc;
     _C64_CLEAR(vic_desc);
     vic_desc.fetch_cb = _c64_vic_fetch;
+    vic_desc.end_frame_cb = desc->end_frame_cb;
     vic_desc.rgba8_buffer = (uint32_t*) desc->pixel_buffer;
     vic_desc.rgba8_buffer_size = desc->pixel_buffer_size;
     vic_desc.vis_x = _C64_DISPLAY_X;
@@ -512,6 +515,7 @@ void c64_init(c64_t* sys, const c64_desc_t* desc) {
     vic_desc.vis_w = _C64_STD_DISPLAY_WIDTH;
     vic_desc.vis_h = _C64_STD_DISPLAY_HEIGHT;
     vic_desc.user_data = sys;
+
     m6569_init(&sys->vic, &vic_desc);
 
     const int sound_hz = _C64_DEFAULT(desc->audio_sample_rate, 44100);

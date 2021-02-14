@@ -4,31 +4,23 @@
 
 /******************/
 
-const frameRate = 50;        // ~50 Hz
-const frameDuration = 1000/frameRate;     // duration of 1 frame in msec
-
 let stopped = false; // allows to stop/resume the emulation
 
 let frames = 0;
-let nextFrameTime = 0;
 let averageFrameTime = 0;
-let minFrameTime = Number.MAX_VALUE;
 
 let cycle = 0;
 let total_cycles = 0;
 
 let throttle = false;
 
+let end_of_frame_hook = undefined;
 let options = {
    load: undefined,
    restore: false
 };
 
-// scanline version
-function renderLines() {
-   poll_keyboard(); c64.ex(20000);
-   c64.vdp();
-}
+let last_keyboardpoll = 0;
 
 function poll_keyboard() {
    // poll keyboard
@@ -49,37 +41,25 @@ function poll_keyboard() {
    }
 }
 
-function renderAllLines() {
-   renderLines();
-}
+let last_timestamp = 0;
 
+function oneFrame(timestamp) {
+   let stamp = timestamp == undefined ? last_timestamp : timestamp;
+   let usec = (stamp - last_timestamp)*1000;
+   last_timestamp = stamp;
 
-let nextFrame;
-let end_of_frame_hook = undefined;
+   if(usec > 32000) usec = 32000;
 
-function oneFrame() {
-   const startTime = new Date().getTime();      
-
-   if(nextFrame === undefined) nextFrame = startTime;
-
-   nextFrame = nextFrame + (1000/frameRate); 
-
-   renderAllLines();
-   frames++;   
-
-   if(end_of_frame_hook !== undefined) end_of_frame_hook();
-
-   const now = new Date().getTime();
-   const elapsed = now - startTime;
-   averageFrameTime = averageFrameTime * 0.992 + elapsed * 0.008;
-   if(elapsed < minFrameTime) minFrameTime = elapsed;
-
-   let time_out = nextFrame - now;
-   if(time_out < 0 || throttle) {
-      time_out = 0;
-      nextFrame = undefined;      
+   if(stamp - last_keyboardpoll > 30) {
+      poll_keyboard();
+      last_keyboardpoll = stamp;
    }
-   if(!stopped) setTimeout(()=>oneFrame(), time_out);   
+
+   c64.exec_us(usec);
+
+   averageFrameTime = averageFrameTime * 0.992 + usec * 0.008;
+
+   if(!stopped) requestAnimationFrame(oneFrame);
 }
 
 
@@ -111,8 +91,4 @@ function main() {
    oneFrame();
 
    bbs();
-}
-
-function cpu_actual_speed() {
-   return (total_cycles / (new Date().valueOf() - cpu_started_msec)) * 1000;
 }

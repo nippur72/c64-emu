@@ -50,6 +50,7 @@ void sys_init() {
    // video
    desc.pixel_buffer = pixel_buffer;                 /* pointer to a linear RGBA8 pixel buffer */
    desc.pixel_buffer_size = PIXBUFSIZE;              /* size of the pixel buffer in bytes */
+   desc.end_frame_cb = end_frame_cb;
 
    // audio
    desc.audio_cb = audio_cb;                         /* called when audio_num_samples are ready */
@@ -88,6 +89,11 @@ EMSCRIPTEN_KEEPALIVE
 void sys_exec() {
    c64_exec(&sys, 20000);
    byte unused = (byte) EM_ASM_INT({ vdp_screen_update($0); }, pixel_buffer );
+}
+
+EMSCRIPTEN_KEEPALIVE
+void sys_exec_us(uint32_t msec) {
+   c64_exec(&sys, msec);
 }
 
 EMSCRIPTEN_KEEPALIVE
