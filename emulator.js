@@ -24,7 +24,7 @@ let last_keyboardpoll = 0;
 
 function poll_keyboard() {
    // poll keyboard
-   if(keyboard_buffer.length > 0) {
+   while(keyboard_buffer.length > 0) {
       let key_event = keyboard_buffer[0];
       keyboard_buffer = keyboard_buffer.slice(1);
 
@@ -50,7 +50,7 @@ function oneFrame(timestamp) {
 
    if(usec > 32000) usec = 32000;
 
-   if(stamp - last_keyboardpoll > 30) {
+   if(stamp - last_keyboardpoll > 15) {
       poll_keyboard();
       last_keyboardpoll = stamp;
    }
