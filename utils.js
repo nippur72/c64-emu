@@ -89,7 +89,7 @@ function paste(line) {
 
 function pasteChar(c) {
    while(c64.peek(198) !== 0) {
-      renderLines();
+      c64.ex(16000);
    }
    c64.poke(631,c);
    c64.poke(198,1);
