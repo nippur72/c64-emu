@@ -5,7 +5,6 @@ A JavaScript emulator for the Commodore 64 computer.
 This emulator is based on the amazing work of Andre Weissflog
 
 https://github.com/floooh/chips-test
-https://github.com/floooh/chips-test
 
 Copyright (c) 2017 Andre Weissflog
 
