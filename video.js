@@ -23,13 +23,6 @@ function calculateGeometry() {
    let canvas = document.getElementById("canvas");
    canvas.width  = SCREEN_W * 2 -(POS_X*2);
    canvas.height = SCREEN_H * 2 -(POS_Y*2);
-
-   // screen is the inner canvas that contains the emulated PAL screen
-   let screenCanvas = document.createElement("canvas");
-   screenCanvas.width  = SCREEN_W * 2 -(POS_X*2);
-   screenCanvas.height = SCREEN_H * 2 -(POS_Y*2);
-
-   //console.log(`${screenCanvas.width} ${screenCanvas.height}`);
 }
 
 calculateGeometry();
@@ -44,12 +37,20 @@ let HH = 272;
 let WW = SCREEN_W;
 let HH = SCREEN_H;
 
-let tms9928a_canvas = document.getElementById("canvas");
-let tms9928a_context = tms9928a_canvas.getContext('2d');
-let tms9928a_imagedata = tms9928a_context.getImageData(0, 0, WW*2, HH*2);
-let imagedata_buffer = new ArrayBuffer(tms9928a_imagedata.data.length);
+let vic_ii_canvas = document.getElementById("canvas");
+let vic_ii_context = vic_ii_canvas.getContext('2d');
+
+// new method
+let vic_ii_imageData = vic_ii_context.createImageData(WW*2, HH*2);
+let bmp = new Uint32Array(vic_ii_imageData.data.buffer);
+
+/*
+// old drawing method
+let vic_ii_imageData = vic_ii_context.getImageData(0, 0, WW*2, HH*2);
+let imagedata_buffer = new ArrayBuffer(vic_ii_imageData.data.length);
 let imagedata_buf8 = new Uint8ClampedArray(imagedata_buffer);
-let imagedata_data = new Uint32Array(imagedata_buffer);
+let bmp = new Uint32Array(imagedata_buffer);
+*/
 
 
 function vdp_screen_update(ptr) {
@@ -64,18 +65,24 @@ function vdp_screen_update(ptr) {
    for(let y=0;y<HH;y++) {
       for(let x=0;x<WW;x++) {
          let pixel = buffer[ptr0];
-         imagedata_data[ptr1++] = pixel;
-         imagedata_data[ptr1++] = pixel;
-         imagedata_data[ptr2++] = pixel;
-         imagedata_data[ptr2++] = pixel;
+         bmp[ptr1++] = pixel;
+         bmp[ptr1++] = pixel;
+         bmp[ptr2++] = pixel;
+         bmp[ptr2++] = pixel;
          ptr0++;
       }
       ptr1 += WW*2;
       ptr2 += WW*2;
    }
 
-   tms9928a_imagedata.data.set(imagedata_buf8);
-   tms9928a_context.putImageData(tms9928a_imagedata, -POS_X, -POS_Y);
+   /*
+   // old drawing method
+   vic_ii_imageData.data.set(imagedata_buf8);
+   vic_ii_context.putImageData(vic_ii_imageData, -POS_X, -POS_Y);
+   */
+
+   // new method
+   vic_ii_context.putImageData(vic_ii_imageData, -POS_X, -POS_Y);
 
    frames++;
    if(end_of_frame_hook !== undefined) end_of_frame_hook();
