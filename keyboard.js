@@ -1,7 +1,23 @@
 
 let last_scroll_lock = undefined;
 
+let control_pressed = false;
+let alt_pressed = false;
+let shift_pressed = false;
+
 function keyDown(e) {
+
+   if(e.code === "ControlLeft") control_pressed = true;
+   if(e.code === "AltLeft") alt_pressed = true;                  
+   if(e.code === "ShiftLeft") shift_pressed = true;                  
+   if(e.code === "ControlRight") control_pressed = true;
+   if(e.code === "AltRight") alt_pressed = true;                  
+   if(e.code === "ShiftRight") shift_pressed = true;                  
+
+   /*
+   console.log("keyDown");
+   console.log(e);
+   */
 
    // from Chrome 71 audio is suspended by default and must resume within an user-generated event
    audioContextResume();
@@ -45,6 +61,24 @@ function keyDown(e) {
 
 function keyUp(e) {
 
+   if(e.code === "ControlLeft") control_pressed = false;
+   if(e.code === "AltLeft") alt_pressed = false;                  
+   if(e.code === "ShiftLeft") shift_pressed = false;                  
+   if(e.code === "ControlRight") control_pressed = false;
+   if(e.code === "AltRight") alt_pressed = false;                  
+   if(e.code === "ShiftRight") shift_pressed = false; 
+   //console.log(e.code);
+
+   /*
+   console.log("keyUp");
+   console.log(e);
+   */
+
+   // fix a bug in Chrome: pressing "ALT-GR @" results in keydown of "ò" instead of "@"
+   //if(e.key === 'ò' && e.keyCode === 192 && e.which === 192) {
+   //   e.key = '@';
+   //}
+
    const hardware_keys = pckey_to_hardware_keys_ITA(e.code, e.key, e.shiftKey, e.ctrlKey, e.altKey, e.getModifierState("AltGraph"));
    if(hardware_keys.length === 0) return;
 
@@ -80,11 +114,20 @@ element.onkeypress = function(e) {
    else if(e.key == "ù") accentate("u");
 }
 
-function accentate(key) {
-   keyDown(fakeEvent(key));
-   keyUp(fakeEvent(key));
+/*
+function accentate(key) {      
+   keyDown(fakeEvent(key));   
+   keyUp(fakeEvent(key));   
    keyDown(fakeEvent("'"));
-   keyUp(fakeEvent("'"));
+   keyUp(fakeEvent("'"));   
+}
+*/
+
+function accentate(key) {      
+   setTimeout(()=>keyDown(fakeEvent(key)), 0);
+   setTimeout(()=>keyUp  (fakeEvent(key)),20); 
+   setTimeout(()=>keyDown(fakeEvent("'")),40);
+   setTimeout(()=>keyUp  (fakeEvent("'")),60);
 }
 
 window.onfocus = function() {
@@ -118,5 +161,5 @@ function reset_keyboard() {
       delete key_press_map[k];
    });
 
-   key_press_map = {};
+   key_press_map = {};  
 }

@@ -22,11 +22,14 @@ let options = {
 
 let last_keyboardpoll = 0;
 
+let keyboard_buffer_empty = true;
+
 function poll_keyboard() {
    // poll keyboard
    while(keyboard_buffer.length > 0) {
       let key_event = keyboard_buffer[0];
       keyboard_buffer = keyboard_buffer.slice(1);
+      keyboard_buffer_empty = keyboard_buffer.length;
 
       if(key_event.type === "press") {
          let keys = key_event.hardware_keys;
@@ -37,6 +40,9 @@ function poll_keyboard() {
          let keys = key_event.hardware_keys;
          //keys.forEach((k) => console.log(k));
          keys.forEach((k) => c64.key_up(k));
+         if(keyboard_buffer_empty && !control_pressed && !alt_pressed && !shift_pressed) {
+            for(let t=0;t<256;t++) c64.key_up(t);            
+         }
       }
    }
 }
