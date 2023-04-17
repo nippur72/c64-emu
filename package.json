@@ -1,23 +1,23 @@
 {
-  "name": "vic20-emu",
+  "name": "c64-emu",
   "version": "0.0.1",
-  "description": "VIC20 emulator",
+  "description": "C64 emulator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nippur72/vic20-emu.git"
+    "url": "git+https://github.com/nippur72/c64-emu.git"
   },
   "keywords": [
-    "vic20"
+    "c64"
   ],
   "author": "Antonino Porcino <nino.porcino@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nippur72/vic20-emu/issues"
+    "url": "https://github.com/nippur72/c64-emu/issues"
   },
-  "homepage": "https://github.com/nippur72/vic20-emu#readme",
+  "homepage": "https://github.com/nippur72/c64-emu#readme",
   "dependencies": {
     "file-saver": "^1.3.8",
     "idb-keyval": "^3.1.0",
