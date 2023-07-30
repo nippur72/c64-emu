@@ -71,5 +71,9 @@ export async function main() {
    //goAudio();
    c64.go();
 
-   bbs();
+   // starts BBS only if wstcp argumen was specified
+   if(options.wstcp !== undefined) {
+      bbs();
+   }
+   
 }
