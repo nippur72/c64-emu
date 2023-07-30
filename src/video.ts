@@ -1,6 +1,4 @@
-
-let aspect = 1.3;
-
+import { get_wasm_instance } from "./emscripten_wrapper";
 
 // good values for CRT PAL
 let SCREEN_W = 392;
@@ -18,14 +16,12 @@ let POS_Y = 0;
 
 let saturation = 1.0;
 
-function calculateGeometry() {
+export function calculateGeometry() {
    // canvas is the outer canvas where the aspect ratio is corrected
-   let canvas = document.getElementById("canvas");
+   let canvas = document.getElementById("canvas") as HTMLCanvasElement;
    canvas.width  = SCREEN_W * 2 -(POS_X*2);
    canvas.height = SCREEN_H * 2 -(POS_Y*2);
 }
-
-calculateGeometry();
 
 /**************************************************/
 
@@ -37,11 +33,11 @@ let HH = 272;
 let WW = SCREEN_W;
 let HH = SCREEN_H;
 
-let vic_ii_canvas = document.getElementById("canvas");
+let vic_ii_canvas = document.getElementById("canvas") as HTMLCanvasElement;
 let vic_ii_context = vic_ii_canvas.getContext('2d');
 
 // new method
-let vic_ii_imageData = vic_ii_context.createImageData(WW*2, HH*2);
+let vic_ii_imageData = vic_ii_context!.createImageData(WW*2, HH*2);
 let bmp = new Uint32Array(vic_ii_imageData.data.buffer);
 
 /*
@@ -52,11 +48,10 @@ let imagedata_buf8 = new Uint8ClampedArray(imagedata_buffer);
 let bmp = new Uint32Array(imagedata_buffer);
 */
 
-
-function vdp_screen_update(ptr) {
-   let start = ptr / wasm_instance.HEAPU32.BYTES_PER_ELEMENT;
+export function vdp_screen_update(ptr: number) {
+   let start = ptr / get_wasm_instance().HEAPU32.BYTES_PER_ELEMENT;
    let size = WW*HH;
-   let buffer = wasm_instance.HEAPU32.subarray(start,start+size);
+   let buffer = get_wasm_instance().HEAPU32.subarray(start,start+size);
 
    let ptr0 = 0;
    let ptr1 = 0;
@@ -82,9 +77,9 @@ function vdp_screen_update(ptr) {
    */
 
    // new method
-   vic_ii_context.putImageData(vic_ii_imageData, -POS_X, -POS_Y);
+   vic_ii_context!.putImageData(vic_ii_imageData, -POS_X, -POS_Y);
 
-   frames++;
-   if(end_of_frame_hook !== undefined) end_of_frame_hook();
+   //frames++;
+   //if(end_of_frame_hook !== undefined) end_of_frame_hook();
 }
 

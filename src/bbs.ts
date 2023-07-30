@@ -1,10 +1,12 @@
 //********************************************************************
 
-let modem_send_to_ws = undefined;
-let modem_close = undefined;
+type SendFunction = (buffer: number[])=>void;
 
-let modem_transmit_buffer = [];
-let modem_receive_buffer = [];
+let modem_send_to_ws: SendFunction|undefined = undefined;
+let modem_close: (()=>void)|undefined = undefined;
+
+let modem_transmit_buffer: number[] = [];
+let modem_receive_buffer: number[] = [];
 
 const MODEM_DATA_OUT = 0xD7F2;
 const MODEM_DATA_IN  = 0xD7F0;
@@ -15,7 +17,7 @@ const MODEM_CONNST   = 0xD7F4;
 let connection_started = false;
 
 // function called from C64 when CPU reads in the range $D7F0-$D7FF
-function modem_read(addr)
+export function modem_read(addr: number)
 {
    if(addr == MODEM_DATA_IN) {
       if(modem_receive_buffer.length == 0) return 0;
@@ -34,7 +36,7 @@ function modem_read(addr)
 let modem_state = 0;
 
 // function called from C64 when CPU writes in the range $D7F0-$D7FF
-function modem_write(addr,data)
+export function modem_write(addr: number, data: number)
 {
    if(addr==MODEM_ACK)
    {
@@ -59,8 +61,10 @@ function modem_write(addr,data)
 }
 
 let wstcp_address = "wss://bbs.sblendorio.eu:8080";
+export let get_wstcp_address = () => wstcp_address;
+export let set_wstcp_address = (address:string) => { wstcp_address = address; };
 
-function bbs() {
+export function bbs() {
    let ws_connection = new WebSocket(wstcp_address, 'bbs');
 
    ws_connection.onerror = function(err) {
@@ -106,7 +110,11 @@ function bbs() {
    modem_close = ()=> ws_connection.close();
 }
 
-function string2Array(str) {
+export function modemClose() {
+   if(modem_close !== undefined) modem_close();
+}
+
+function string2Array(str: string) {
    let arr = [];
 
    for(let t=0; t<str.length; t++)
@@ -115,7 +123,7 @@ function string2Array(str) {
    return new Uint8Array(arr);
 }
 
-function array2String(data) {
+function array2String(data: number[]) {
    let str = "";
 
    for(var index=0; index<data.length; index++)
@@ -124,7 +132,7 @@ function array2String(data) {
    return str;
 }
 
-function printm(msg) {
+function printm(msg: string) {
    let data = string2Array(msg);
    data.forEach(e=>modem_receive_buffer.push(e));
 }

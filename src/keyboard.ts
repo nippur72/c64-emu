@@ -1,11 +1,14 @@
+import { audioContextResume } from "./audio";
+import { c64 } from "./emscripten_wrapper";
+import { pckey_to_hardware_keys_ITA} from "./keyboard_IT";
 
-let last_scroll_lock = undefined;
+let last_scroll_lock: boolean | undefined = undefined;
 
 let control_pressed = false;
 let alt_pressed = false;
 let shift_pressed = false;
 
-function keyDown(e) {
+function keyDown(e: KeyboardEvent) {
 
    if(e.code === "ControlLeft") control_pressed = true;
    if(e.code === "AltLeft") alt_pressed = true;                  
@@ -29,7 +32,7 @@ function keyDown(e) {
       last_scroll_lock = scroll_lock_key_pressed;
       let emu_joystick = scroll_lock_key_pressed ? 3 : 0;
       c64.emu_joy(emu_joystick);
-      console.log(`Joystick emulation ${emu_joystick==1?"enabled":"disabled"}`);
+      console.log(`Joystick emulation ${emu_joystick==3?"enabled":"disabled"}`);
    }
 
    // disable auto repeat, as it is handled on the firmware
@@ -59,7 +62,7 @@ function keyDown(e) {
    }
 }
 
-function keyUp(e) {
+function keyUp(e: KeyboardEvent) {
 
    if(e.code === "ControlLeft") control_pressed = false;
    if(e.code === "AltLeft") alt_pressed = false;                  
@@ -93,7 +96,7 @@ function keyUp(e) {
 
    // fix shift problem
    if(key_press_map[code] !== undefined) {
-      k = key_press_map[code];
+      let k = key_press_map[code];
       keyboard_buffer.push({ type: "release", hardware_keys: k });
       delete key_press_map[code];
    }
@@ -123,7 +126,7 @@ function accentate(key) {
 }
 */
 
-function accentate(key) {      
+function accentate(key: string) {      
    setTimeout(()=>keyDown(fakeEvent(key)), 0);
    setTimeout(()=>keyUp  (fakeEvent(key)),20); 
    setTimeout(()=>keyDown(fakeEvent("'")),40);
@@ -134,7 +137,7 @@ window.onfocus = function() {
    reset_keyboard(); // release all keys to prevent ALT always pressed after ALT+TAB
 }
 
-function fakeEvent(key) {
+function fakeEvent(key: string) {
    return {
       key: key,
       code: "",
@@ -143,12 +146,17 @@ function fakeEvent(key) {
       altKey: false,
       getModifierState: ()=>false,
       preventDefault: ()=>false
-   };
+   } as any as KeyboardEvent;
 }
 
-let keyboard_buffer = [];
+interface KeyBoard_C64Event {
+   type: "press"|"release";
+   hardware_keys: number[];
+}
+
+let keyboard_buffer: KeyBoard_C64Event[] = [];
 //let key_pressed = [];
-let key_press_map = {};
+let key_press_map: {[key:string]: number[]} = {};
 
 
 function reset_keyboard() {
@@ -162,4 +170,29 @@ function reset_keyboard() {
    });
 
    key_press_map = {};  
+}
+
+let keyboard_buffer_empty: boolean = true;
+
+export function poll_keyboard() {
+   // poll keyboard
+   while(keyboard_buffer.length > 0) {
+      let key_event = keyboard_buffer[0];
+      keyboard_buffer = keyboard_buffer.slice(1);
+      keyboard_buffer_empty = keyboard_buffer.length == 0;
+
+      if(key_event.type === "press") {
+         let keys = key_event.hardware_keys;
+         //keys.forEach((k) => console.log(k));
+         keys.forEach((k: number) => c64.key_down(k));
+      }
+      else if(key_event.type === "release") {
+         let keys = key_event.hardware_keys;
+         //keys.forEach((k) => console.log(k));
+         keys.forEach((k) => c64.key_up(k));
+         if(keyboard_buffer_empty && !control_pressed && !alt_pressed && !shift_pressed) {
+            for(let t=0;t<256;t++) c64.key_up(t);            
+         }
+      }
+   }
 }

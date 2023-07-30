@@ -20,7 +20,7 @@
 
    */
 
-function pckey_to_hardware_keys_ITA(code, key, shift, control, cbm, altgraph) {
+export function pckey_to_hardware_keys_ITA(code: string, key: string, shift: boolean, control: boolean, cbm: boolean, altgraph: boolean) {
    //console.log(code, key, e);
    //console.log(e.getModifierState("ScrollLock"));
 

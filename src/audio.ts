@@ -1,13 +1,14 @@
+import { get_wasm_instance } from "./emscripten_wrapper";
 
 const AUDIO_BUFSIZE = 1024;  // must match .c
 
-let audio_buffers_queue = [];
+let audio_buffers_queue: number[][] = [];
 
-function audio_buf_ready(ptr, size) {
+export function audio_buf_ready(ptr: number, size: number) {
    if(!audio_playing) return;
 
-   let start = ptr / wasm_instance.HEAPF32.BYTES_PER_ELEMENT;
-   let buffer = wasm_instance.HEAPF32.subarray(start,start+size);
+   let start = ptr / get_wasm_instance().HEAPF32.BYTES_PER_ELEMENT;
+   let buffer = get_wasm_instance().HEAPF32.subarray(start,start+size) as number[];
 
    audio_buffers_queue.push([ ...buffer ]);  // push a cloned copy
 }
@@ -16,13 +17,11 @@ function audio_buf_ready(ptr, size) {
 
 const bufferSize = AUDIO_BUFSIZE;
 
-let audioContext = undefined;
-let sampleRate;
-let speakerSound;
+let audioContext: AudioContext|undefined = undefined;
+let speakerSound: ScriptProcessorNode | undefined;
 
 function createAudioContext() {
-   audioContext = new (window.AudioContext || window.webkitAudioContext)();
-   sampleRate = audioContext.sampleRate;
+   audioContext = new window.AudioContext(); // new (window.AudioContext || window.webkitAudioContext)();   
    speakerSound = audioContext.createScriptProcessor(bufferSize, 1, 1);
 
    speakerSound.onaudioprocess = function(e) {
@@ -65,29 +64,36 @@ function csave() {
 }
 */
 
-let audio_playing = undefined;
+let audio_playing: boolean|undefined = undefined;
 
-function goAudio() {
+export function goAudio() {
    if(audioContext === undefined) createAudioContext();
+
+   if(speakerSound === undefined) return;
+   if(audioContext === undefined) return;
    speakerSound.connect(audioContext.destination);
    audio_playing = true;
    audio_buffers_queue = [];
 }
 
-function stopAudio() {
+export function stopAudio() {
    if(audio_playing !== undefined && audio_playing === true) {
+      if(speakerSound === undefined) return;
+      if(audioContext === undefined) return;
       speakerSound.disconnect(audioContext.destination);
       audio_playing = false;
    }
 }
 
-async function audioContextResume() {
+export async function audioContextResume() {
    if(audioContext === undefined) createAudioContext();
    if(audio_playing === undefined) goAudio();
+
+   if(speakerSound === undefined) return;
+   if(audioContext === undefined) return;
 
    if(audioContext.state === 'suspended') {
       await audioContext.resume();
       audio_buffers_queue = [];
    }
 }
-

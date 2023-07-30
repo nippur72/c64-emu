@@ -1,5 +1,41 @@
 /**** utility functions ****/
 
+import { c64 } from "./emscripten_wrapper";
+
+export function hex(value: number, size: number) {
+   if(size === undefined) size = 2;
+   let s = "0000" + value.toString(16);
+   return s.substr(s.length - size);
+}
+
+function pasteLine(text: string) {
+   const lines = text.split("\n");
+   for(let t=0; t<lines.length; t++) {
+      const linea = lines[t];
+      console.log(linea);
+      paste(linea);
+      pasteChar(13);   // CR
+   }
+   console.log("pasted!");
+}
+
+export function paste(line: string) {
+
+   for(let t=0;t<line.length;t++) {
+      let c = line.charCodeAt(t);
+      pasteChar(c);
+   }
+}
+
+function pasteChar(c: number) {
+   while(c64.peek(198) !== 0) {
+      c64.ex(16000);
+   }
+   c64.poke(631,c);
+   c64.poke(198,1);
+}
+
+/*
 function dumpMem(start, end, rows) {
    if(end==undefined) end=start+15;
    if(rows==undefined) rows=16;
@@ -35,13 +71,10 @@ function hexDump(memory, start, end, rows) {
    }
    return s;
 }
+*/
 
-function hex(value, size) {
-   if(size === undefined) size = 2;
-   let s = "0000" + value.toString(16);
-   return s.substr(s.length - size);
-}
 
+/*
 function bin(value, size) {
    if(size === undefined) size = 8;
    let s = "0000000000000000" + value.toString(2);
@@ -52,49 +85,10 @@ function cpu_status() {
    const state = cpu.getState();
    return `A=${hex(state.a)} BC=${hex(state.b)}${hex(state.c)} DE=${hex(state.d)}${hex(state.e)} HL=${hex(state.h)}${hex(state.l)} IX=${hex(state.ix,4)} IY=${hex(state.iy,4)} SP=${hex(state.sp,4)} PC=${hex(state.pc,4)} S=${state.flags.S}, Z=${state.flags.Z}, Y=${state.flags.Y}, H=${state.flags.H}, X=${state.flags.X}, P=${state.flags.P}, N=${state.flags.N}, C=${state.flags.C}`;   
 }
+*/
 
-function mem_write_word(address, word) {
-   mem_write(address + 0, word & 0xFF);
-   mem_write(address + 1, (word & 0xFF00) >> 8);
-}
 
-function mem_read_word(address) {
-   const lo = mem_read(address + 0);
-   const hi = mem_read(address + 1);
-   return lo+hi*256;
-}
-
-async function crun(filename) {
-   await load(filename);
-}
-
-function pasteLine(text) {
-   const lines = text.split("\n");
-   for(let t=0; t<lines.length; t++) {
-      const linea = lines[t];
-      console.log(linea);
-      paste(linea);
-      pasteChar(13);   // CR
-   }
-   console.log("pasted!");
-}
-
-function paste(line) {
-
-   for(let t=0;t<line.length;t++) {
-      let c = line.charCodeAt(t);
-      pasteChar(c);
-   }
-}
-
-function pasteChar(c) {
-   while(c64.peek(198) !== 0) {
-      c64.ex(16000);
-   }
-   c64.poke(631,c);
-   c64.poke(198,1);
-}
-
+/*
 function wait(time) {
    return new Promise((resolve,reject)=>{
       setTimeout(()=>{
@@ -251,4 +245,4 @@ async function makeBase64(fileName) {
    let long_url = window.btoa(bytes);
    console.log(`https://nippur72.github.io/c64-emu?b=${long_url}`);
 }
-
+*/
