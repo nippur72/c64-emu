@@ -23,6 +23,8 @@ typedef uint16_t word;
 #include "systems/c1541.h"
 #include "roms/c64-roms.h"
 #include "roms/c1541-roms.h"
+#include "roms/6499_bank0.h"
+#include "roms/6499_bank1.h"
 #include "systems/c64.h"
 
 c64_desc_t desc;
@@ -73,6 +75,7 @@ void sys_init() {
    desc.c1541_enabled = false;
 
    c64_init(&sys, &desc);
+   c64_reset(&sys);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -172,3 +175,23 @@ uint8_t sys_cas_port() {
    return sys.cas_port;
 }
 
+EMSCRIPTEN_KEEPALIVE
+void sys_set_exrom(bool value) {
+   sys._EXROM = value;
+   sys._GAME = value;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void sys_set_cbm_6499_nbank(int value) {
+   sys.cbm_6499_nbank = value;   
+}
+
+EMSCRIPTEN_KEEPALIVE
+void sys_set_emulate_cbm_6499(bool value) {
+   sys.emulate_6499 = value;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void sys_set_external_irq(bool value) {
+   sys.external_irq = value;
+}

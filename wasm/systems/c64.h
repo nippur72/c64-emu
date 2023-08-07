@@ -313,8 +313,8 @@ typedef enum {
 #define C64_KEY_F7       (0xF7)     /* F7 */
 #define C64_KEY_F8       (0xF8)     /* F8 */
 
-/* audio sample data callback */
-typedef void (*c64_audio_callback_t)(const float* samples, int num_samples, void* user_data);
+// audio sample data callback                                                                 // @@@ nippur72
+typedef void (*c64_audio_callback_t)(const float* samples, int num_samples, void* user_data); // @@@ nippur72
 
 /* config parameters for c64_init() */
 typedef struct {
@@ -327,13 +327,13 @@ typedef struct {
                                    at least 512*312*4 bytes, or ask via c64_max_display_size() */
     int pixel_buffer_size;      /* size of the pixel buffer in bytes */
 
-    m6569_end_frame_t end_frame_cb;  /* end of frame callback */
+    m6569_end_frame_t end_frame_cb;  /* end of frame callback */   // @@@ nippur72
 
     /* optional user-data for callback functions */
     void* user_data;
 
     /* audio output config (if you don't want audio, set audio_cb to zero) */
-    c64_audio_callback_t audio_cb;  /* called when audio_num_samples are ready */
+    c64_audio_callback_t audio_cb;  /* called when audio_num_samples are ready */   // @@@ nippur72
     int audio_num_samples;          /* default is C64_AUDIO_NUM_SAMPLES */
     int audio_sample_rate;          /* playback sample rate in Hz, default is 44100 */
     float audio_sid_volume;         /* audio volume of the SID chip (0.0 .. 1.0), default is 1.0 */
@@ -379,8 +379,7 @@ typedef struct {
     mem_t mem_vic;              /* VIC-visible memory mapping */
 
     void* user_data;
-    uint32_t* pixel_buffer;
-    c64_audio_callback_t audio_cb;
+    uint32_t* pixel_buffer;    
     int num_samples;
     int sample_pos;
     float sample_buffer[C64_MAX_AUDIO_SAMPLES];
@@ -393,6 +392,17 @@ typedef struct {
 
     c1530_t c1530;      /* optional datassette */
     c1541_t c1541;      /* optional floppy drive */
+
+    // @@@ nippur72 start
+    c64_audio_callback_t audio_cb;  
+    bool _EXROM;
+    bool _GAME;
+    uint8_t cbm_6499_nbank;
+    bool emulate_6499;
+    bool external_irq;
+    uint32_t ticks;
+    uint32_t tod_counter;
+    // @@@ nippur72 end
 } c64_t;
 
 /* initialize a new C64 instance */
@@ -483,7 +493,7 @@ void c64_init(c64_t* sys, const c64_desc_t* desc) {
     memcpy(sys->rom_basic, desc->rom_basic, sizeof(sys->rom_basic));
     memcpy(sys->rom_kernal, desc->rom_kernal, sizeof(sys->rom_kernal));
     sys->user_data = desc->user_data;
-    sys->audio_cb = desc->audio_cb;
+    sys->audio_cb = desc->audio_cb;   // @@@ nippur72
     sys->num_samples = _C64_DEFAULT(desc->audio_num_samples, C64_DEFAULT_AUDIO_SAMPLES);
     CHIPS_ASSERT(sys->num_samples <= C64_MAX_AUDIO_SAMPLES);
 
@@ -546,6 +556,14 @@ void c64_init(c64_t* sys, const c64_desc_t* desc) {
         c1541_desc.rom_e000_ffff_size = desc->c1541_rom_e000_ffff_size;
         c1541_init(&sys->c1541, &c1541_desc);
     }
+
+    // @@@ nippur72 start
+    sys->_EXROM = false;       // at PIA RESET CB2 is input thus EXROM is selected
+    sys->_GAME = false;        // at PIA RESET CB2 is input thus GAME is selected
+    sys->cbm_6499_nbank = 1;  // at PIA RESET CA2 is input thus bank 1 is selected 
+    sys->emulate_6499 = false;
+    sys->external_irq = false;
+    // @@@ nippur72 end
 }
 
 void c64_discard(c64_t* sys) {
@@ -594,6 +612,11 @@ void c64_reset(c64_t* sys) {
     m6526_reset(&sys->cia_2);
     m6569_reset(&sys->vic);
     m6581_reset(&sys->sid);
+    // @@@ nippur72 start
+    if(sys->emulate_6499) {
+        byte data = (byte) EM_ASM_INT({ return cbm_6499_reset(); });
+    }
+    // @@@ nippur72 end
 }
 
 void c64_tick(c64_t* sys) {
@@ -693,7 +716,7 @@ void c64_joystick(c64_t* sys, uint8_t joy1_mask, uint8_t joy2_mask) {
     sys->joy_joy2_mask = joy2_mask;
 }
 
-static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
+static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {    
 
     /* FIXME: move datasette and floppy tick to end */
     if (sys->c1530.valid) {
@@ -701,11 +724,16 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
     }
     if (sys->c1541.valid) {
         c1541_tick(&sys->c1541);
-    }
+    }    
 
     /* tick the CPU */
     pins = m6502_tick(&sys->cpu, pins);
     const uint16_t addr = M6502_GET_ADDR(pins);
+
+    sys->ticks++; // @@@ nippur72
+
+    // create a 60 Hz signal for TOD (CIA1)
+    if(++sys->tod_counter > (C64_FREQUENCY / 50)) sys->tod_counter = 0; // @@@ nippur72
 
     /* those pins are set each tick by the CIAs and VIC */
     pins &= ~(M6502_IRQ|M6502_NMI|M6502_RDY|M6510_AEC);
@@ -718,7 +746,8 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
     bool cpu_io_access = false;
     bool color_ram_access = false;
     bool mem_access = false;
-    bool modem_access = false;
+    bool modem_access = false;   // @@@ nippur72
+    bool cbm6499_access = false; // @@@ nippur72
     uint64_t vic_pins = pins & M6502_PIN_MASK;
     uint64_t cia1_pins = pins & M6502_PIN_MASK;
     uint64_t cia2_pins = pins & M6502_PIN_MASK;
@@ -738,9 +767,9 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
                     /* SID (D400..D7FF) */
                     sid_pins |= M6581_CS;
                 }
-                else if (addr < 0xD800) {
-                    /* MODEM (D7F0..D7FF) */
-                    modem_access = true;
+                else if (addr < 0xD800) {        // @@@ nippur72
+                    /* MODEM (D7F0..D7FF) */     // @@@ nippur72
+                    modem_access = true;         // @@@ nippur72 
                 }
                 else if (addr < 0xDC00) {
                     /* read or write the special color Static-RAM bank (D800..DBFF) */
@@ -754,6 +783,11 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
                     /* CIA-2 (DD00..DDFF) */
                     cia2_pins |= M6526_CS;
                 }
+                // @@@ nippur72 start
+                else {
+                    if(sys->emulate_6499) cbm6499_access = true;
+                }
+                // @@@ nippur72 end
             }
             else {
                 mem_access = true;
@@ -768,9 +802,9 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             /* new audio sample ready */
             sys->sample_buffer[sys->sample_pos++] = sys->sid.sample;
             if (sys->sample_pos == sys->num_samples) {
-                if (sys->audio_cb) {
-                    sys->audio_cb(sys->sample_buffer, sys->num_samples, sys->user_data);
-                }
+                if (sys->audio_cb) {                                                      // @@@ nippur72
+                    sys->audio_cb(sys->sample_buffer, sys->num_samples, sys->user_data);  // @@@ nippur72
+                }                                                                         // @@@ nippur72
                 sys->sample_pos = 0;
             }
         }
@@ -800,6 +834,10 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
         if (sys->cas_port & C64_CASPORT_READ) {
             cia1_pins |= M6526_FLAG;
         }
+        
+        // feed the TOD singnal to the CIA1
+        if(sys->tod_counter == 0) cia1_pins |= M6526_TOD;  // @@@ nippur72
+
         cia1_pins = m6526_tick(&sys->cia_1, cia1_pins);
         const uint8_t kbd_lines = ~M6526_GET_PA(cia1_pins);
         kbd_set_active_lines(&sys->kbd, kbd_lines);
@@ -880,7 +918,8 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             sys->color_ram[addr & 0x03FF] = M6502_GET_DATA(pins);
         }
     }
-    else if (modem_access) {
+    // @@@ nippur72 start
+    else if (modem_access) {        
         if (pins & M6502_RW) {
             /* modem read: chiama la funzione JavaScript "modem_read(addr)" */
             byte data = (byte) EM_ASM_INT({ return modem_read($0); }, addr);
@@ -892,6 +931,35 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             byte unused = (byte) EM_ASM_INT({ modem_write($0,$1); }, addr, data );
         }
     }
+    else if (cbm6499_access) {        
+        if(!(pins & M6502_RDY)) {        
+            if (pins & M6502_RW) {                  
+                /* modem read: chiama la funzione JavaScript "cbm_6499_read(addr)" */
+                byte data = (byte) EM_ASM_INT({ return cbm_6499_read($0, $1); }, addr, sys->ticks);
+                M6502_SET_DATA(pins, data);
+            }
+            else {
+                /* modem write: chiama la funzione JavaScript "cbm_6499_write(addr,data) */
+                uint8_t data = M6502_GET_DATA(pins);
+                byte unused = (byte) EM_ASM_INT({ cbm_6499_write($0,$1); }, addr, data );
+            }
+        }
+    }
+    else if (sys->emulate_6499 && mem_access && sys->_EXROM && sys->_GAME && addr >= 0x8000 && addr <= 0xBFFF) {
+        if (pins & M6502_RW) {
+            // cartridge 6499 read 
+            if(sys->cbm_6499_nbank == 0) {
+                M6502_SET_DATA(pins, rom_6499_b0[addr & 0x3fff]);
+            }
+            else {
+                M6502_SET_DATA(pins, rom_6499_b1[addr & 0x3fff]);
+            }
+        }
+        else {
+            // cartridge 6499 write, does nothing            
+        }
+    }
+    // @@@ nippur72 end
     else if (mem_access) {
         if (pins & M6502_RW) {
             /* memory read */
@@ -902,6 +970,12 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             mem_wr(&sys->mem_cpu, addr, M6502_GET_DATA(pins));
         }
     }
+
+    // @@@ nippur72 start
+    if(sys->external_irq) {
+        pins |= M6502_IRQ;
+    }
+    // @@@ nippur72 end
 
     return pins;
 }
@@ -1039,7 +1113,7 @@ static void _c64_init_memory_map(c64_t* sys) {
     */
     mem_map_ram(&sys->mem_vic, 1, 0x0000, 0x10000, sys->ram);
     mem_map_rom(&sys->mem_vic, 0, 0x1000, 0x1000, sys->rom_char);
-    mem_map_rom(&sys->mem_vic, 0, 0x9000, 0x1000, sys->rom_char);
+    mem_map_rom(&sys->mem_vic, 0, 0x9000, 0x1000, sys->rom_char);    
 }
 
 static void _c64_init_key_map(c64_t* sys) {
