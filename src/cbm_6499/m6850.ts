@@ -72,7 +72,7 @@ export class M6850
       return status;
    }
 
-   cpu_read(addr: number, ticks: number) {
+   cpu_read(addr: number) {
       let RS = addr & 1;
       if(RS === 0) {
          let data = this.get_status_byte();

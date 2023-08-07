@@ -53,17 +53,11 @@ export function cbm_6499_reset()
    PIA.reset(); 
 }
 
-let last_tick = 0;
-
 // function called from C64 when CPU reads I/O in the range $DE00-DFFF
-export function cbm_6499_read(addr: number, ticks: number)
+export function cbm_6499_read(addr: number)
 {   
-   let diff = ticks - last_tick;
-   last_tick = ticks;
-   if(diff < 10) console.log(diff,ticks,addr);
-
    if(addr < 0xDF00) return PIA.read(addr);
-   else              return ACIA.cpu_read(addr, ticks);
+   else              return ACIA.cpu_read(addr);
 }
 
 // function called from C64 when CPU writes I/O in the range $DE00-DFFF
