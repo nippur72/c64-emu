@@ -9,8 +9,6 @@ let ACIA = new M6850();
 
 export let bbs = new BBSConnector();
 
-bbs.protocol = "bbs";
-
 bbs.on_error = ()=>{
    // sets NO CARRIER
    ACIA.STATUS_NO_CARRIER = 1;
