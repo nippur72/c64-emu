@@ -114,7 +114,7 @@ extern "C" {
 /* memory fetch callback, used to feed pixel- and color-data into the m6569 */
 typedef uint16_t (*m6569_fetch_t)(uint16_t addr, void* user_data);
 
-/* end of video frame callback */
+// @@@nippur72 end of video frame callback 
 typedef void (*m6569_end_frame_t)(void* user_data);
 
 /* setup parameters for m6569_init() function */
@@ -127,8 +127,8 @@ typedef struct {
     uint16_t vis_x, vis_y, vis_w, vis_h;
     /* the memory-fetch callback */
     m6569_fetch_t fetch_cb;
-    /* end of video frame callback */
-    m6569_end_frame_t end_frame_cb;
+    /* end of video frame callback */   // @@@nippur72
+    m6569_end_frame_t end_frame_cb;     // @@@nippur72
     /* optional user-data for fetch callback */
     void* user_data;
 } m6569_desc_t;
@@ -195,7 +195,7 @@ typedef struct {
     bool display_state;             /* true: in display state, false: in idle state */
     bool badline;                   /* true when the badline state is active */
     bool frame_badlines_enabled;    /* true when badlines are enabled in frame */
-    m6569_end_frame_t end_frame_cb;
+    m6569_end_frame_t end_frame_cb; // @@@nippur72
 } m6569_raster_unit_t;
 
 /* address generator / memory interface state */
@@ -355,6 +355,7 @@ static const uint32_t _m6569_colors[16] = {
     _M6569_RGBA8(0x70,0x6d,0xeb),
     _M6569_RGBA8(0xb2,0xb2,0xb2),
 */
+    // @@@nippur72
     // alternate palette taken from https://www.lemon64.com/forum/viewtopic.php?t=6578&sid=7e243d11114c62a27f188e4057d343d6
     _M6569_RGBA8(0x00,0x00,0x00),
     _M6569_RGBA8(0xFF,0xFF,0xFF),
@@ -433,7 +434,7 @@ void m6569_init(m6569_t* vic, const m6569_desc_t* desc) {
     _m6569_init_crt(&vic->crt, desc);
     vic->mem.fetch_cb = desc->fetch_cb;
     vic->mem.user_data = desc->user_data;
-    vic->rs.end_frame_cb = desc->end_frame_cb;
+    vic->rs.end_frame_cb = desc->end_frame_cb;   // @@@nippur72
 }
 
 /*--- reset ------------------------------------------------------------------*/
@@ -1213,9 +1214,9 @@ static inline void _m6569_rs_next_rasterline(m6569_t* vic) {
     if (vic->rs.v_count == (_M6569_VTOTAL-1)) {
         vic->rs.v_count = 0;
         vic->rs.vc_base = 0;
-        if(vic->rs.end_frame_cb != NULL) {
-            vic->rs.end_frame_cb(0);
-        }
+        if(vic->rs.end_frame_cb != NULL) {     // @@@nippur72
+            vic->rs.end_frame_cb(0);           // @@@nippur72
+        }                                      // @@@nippur72
     }
     else {
         vic->rs.v_count++;
