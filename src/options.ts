@@ -45,5 +45,11 @@ export async function parseQueryStringCommands() {
       }   
    }
 
+   if(options.cbm6499 !== undefined) {
+      c64.set_exrom(true);
+      c64.set_emulate_cbm_6499(true); 
+      c64.reset();     
+   }
+
    return options;
 }

@@ -1,6 +1,8 @@
 "use strict";
 
 // TODO start bbs only when required
+// normal BBS starts with ?load=nippur72/terminal.prg
+// prestel BBS starts with ?cbm6499=true
 
 /******************/
 

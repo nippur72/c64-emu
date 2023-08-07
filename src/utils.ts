@@ -246,3 +246,21 @@ async function makeBase64(fileName) {
    console.log(`https://nippur72.github.io/c64-emu?b=${long_url}`);
 }
 */
+
+export function string2Uint8Array(str: string) {
+   let arr = [];
+
+   for(let t=0; t<str.length; t++)
+      arr.push(str.charCodeAt(t) & 0xFF);
+
+   return new Uint8Array(arr);
+}
+
+export function array2String(data: number[]) {
+   let str = "";
+
+   for(var index=0; index<data.length; index++)
+      str += String.fromCharCode(data[index]);
+
+   return str;
+}

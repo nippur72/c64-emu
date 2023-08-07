@@ -46,6 +46,12 @@ export const c64 = {
 
    stopped: true,
 
+   // CBM 6499 ADATTATORE TELEMATICO emulation
+   set_exrom: (value: boolean) => {},
+   set_cbm_6499_nbank: (value: number) => {},
+   set_emulate_cbm_6499: (value: boolean) => {},
+   set_external_irq: (value: boolean) => {}
+
 };
 
 export async function load_wasm() {   
@@ -122,6 +128,12 @@ export async function load_wasm() {
    keyboard_release   = instance.cwrap("keyboard_release", null, ['number', 'number'] );
    keyboard_poll      = instance.cwrap("keyboard_poll"   , 'number', ['number'] );
    */
+
+   c64.set_exrom            = instance.cwrap("sys_set_exrom"             , null, ['bool'] ); 
+   c64.set_cbm_6499_nbank   = instance.cwrap("sys_set_cbm_6499_nbank"    , null, ['number'] ); 
+   c64.set_emulate_cbm_6499 = instance.cwrap("sys_set_emulate_cbm_6499"  , null, ['bool'] ); 
+   c64.set_external_irq     = instance.cwrap("sys_set_external_irq"      , null, ['bool'] ); 
+   
    wasm_instance = instance;
    
    return instance;
