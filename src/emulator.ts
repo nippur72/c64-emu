@@ -15,16 +15,6 @@ import { fetchProgram } from "./fetchProgram";
 
 let stopped = false; // allows to stop/resume the emulation
 
-let frames = 0;
-let averageFrameTime = 0;
-
-let cycle = 0;
-let total_cycles = 0;
-
-let throttle = false;
-
-let end_of_frame_hook = undefined;
-
 let last_keyboardpoll = 0;
 
 let last_timestamp = 0;
@@ -42,8 +32,6 @@ export function oneFrame(timestamp: number | undefined) {
    }
 
    c64.exec_us(usec);
-
-   averageFrameTime = averageFrameTime * 0.992 + usec * 0.008;
 
    if(!stopped) requestAnimationFrame(oneFrame);
 }
