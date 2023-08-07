@@ -1,7 +1,6 @@
 export class BBSConnector {
-   address = "wss://bbs.sblendorio.eu";  
-   port = "8080";
-   protocol = "bbs";
+   address = "";     
+   protocol: string | undefined;
 
    ws_connection: WebSocket | undefined;   
    
@@ -9,11 +8,12 @@ export class BBSConnector {
    on_open = ()=> {};
    on_close = ()=> {};
    on_data = (data: Uint8Array)=> {};
-
-   last_timestamp = 0;
    
    connect() {
-      this.ws_connection = new WebSocket(`${this.address}:${this.port}`, this.protocol);
+      // empty string means no protocol (undefined)
+      let protocol = this.protocol === '' ? undefined : this.protocol;
+
+      this.ws_connection = new WebSocket(`${this.address}`,protocol);
       this.ws_connection.binaryType = "arraybuffer";
 
       this.ws_connection.onerror = (err)=>{
@@ -42,7 +42,6 @@ export class BBSConnector {
             console.log("websocket Received string: '" + e.data + "'");
          }
       };
-
    }
 
    send_data_to_bbs(data: number[]) {

@@ -1,6 +1,10 @@
 "use strict";
 
 // TODO start bbs only when required
+// TODO riunificare Terminale/PETSCII bbs con 6499
+// TODO push CIA TOD to flooh/chips
+// TODO update to new c64 in flooh/chips
+
 // normal BBS starts with ?load=nippur72/terminal.prg
 // prestel BBS starts with ?cbm6499=true
 
@@ -36,7 +40,6 @@ export function oneFrame(timestamp: number | undefined) {
    if(!stopped) requestAnimationFrame(oneFrame);
 }
 
-
 export async function main() {
 
    c64.config(0);
@@ -46,24 +49,16 @@ export async function main() {
 
    let options = await parseQueryStringCommands();
 
-   // autostart terminal if loaded from bbs.sblendorio.ue
+   // autostart terminal if loaded from bbs.sblendorio.ue or bbs.retrocampus.com
    let href = window.location.href;
-   let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g);
-   let is_retroacademy = href.match(/^http:\/\/(bbs\.retroacademy\.it)/g);
+   let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g);   
 
-   if(is_retrocampus  && options.wstcp === undefined) set_wstcp_address("wss://bbs.sblendorio.eu:8080");
-   if(is_retroacademy && options.wstcp === undefined) set_wstcp_address("wss://bbs.sblendorio.eu:8081");
-   if((is_retroacademy || is_retrocampus) && options.load === undefined) fetchProgram("nippur72/terminal.prg");
+   if(is_retrocampus) {
+      if(options.wstcp === undefined) set_wstcp_address("wss://bbs.sblendorio.eu:8080");
+      if(options.load === undefined) fetchProgram("nippur72/terminal.prg");
+   }
 
    calculateGeometry();
 
-   // starts drawing frames
-   //goAudio();
-   c64.go();
-
-   // starts BBS only if wstcp argumen was specified
-   if(options.wstcp !== undefined) {
-      bbs();
-   }
-   
+   c64.go();   
 }

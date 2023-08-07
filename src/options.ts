@@ -2,6 +2,7 @@ import { set_wstcp_address } from "./bbs";
 import { c64 } from "./emscripten_wrapper";
 import { fetchProgram } from "./fetchProgram";
 import { externalLoad } from "./mdawson";
+import { bbs } from "./cbm_6499/cbm_6499";
 
 type QueryStringObject = {[key: string]:string};
 
@@ -46,6 +47,8 @@ export async function parseQueryStringCommands() {
    }
 
    if(options.cbm6499 !== undefined) {
+      bbs.address = options.wstcp ?? "wss://bbs.sblendorio.eu:8081";      
+      bbs.protocol = options.protocol ?? "bbs";
       c64.set_exrom(true);
       c64.set_emulate_cbm_6499(true); 
       c64.reset();     

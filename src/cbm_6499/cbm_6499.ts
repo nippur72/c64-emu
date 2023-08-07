@@ -6,10 +6,9 @@ import { BBSConnector } from "./videotel";
 
 let PIA = new M6821();
 let ACIA = new M6850();
-let bbs = new BBSConnector();
 
-bbs.address = "wss://bbs.sblendorio.eu";  
-bbs.port = "8081";
+export let bbs = new BBSConnector();
+
 bbs.protocol = "bbs";
 
 bbs.on_error = ()=>{
