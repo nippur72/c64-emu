@@ -35,8 +35,6 @@ export class BBSConnector {
          if (e.data instanceof ArrayBuffer) {
             let u = new Uint8Array(e.data);
             this.on_data(u);
-            if(e.timeStamp <= this.last_timestamp) console.log("**************");
-            this.last_timestamp = e.timeStamp;
          }
          else {
             console.log("websocket Received string: '" + e.data + "'");
