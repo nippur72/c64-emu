@@ -60,12 +60,18 @@ export function modem_write(addr: number, data: number)
    }
 }
 
-let wstcp_address = "wss://bbs.sblendorio.eu:8080";
+let wstcp_address = "";
+let protocol = "";
+
 export let get_wstcp_address = () => wstcp_address;
 export let set_wstcp_address = (address:string) => { wstcp_address = address; };
 
-export function bbs() {
-   let ws_connection = new WebSocket(wstcp_address, 'bbs');
+export let get_protocol = () => protocol;
+export let set_protocol = (prot:string) => { protocol = prot; };
+
+function bbs() {
+   let prot = protocol === '' ? undefined : protocol;
+   let ws_connection = new WebSocket(wstcp_address, prot);
 
    ws_connection.onerror = function(err) {
       console.log('BBS: connection error');

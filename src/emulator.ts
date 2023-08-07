@@ -14,7 +14,7 @@ import { c64 } from "./emscripten_wrapper";
 import { parseQueryStringCommands } from "./options";
 import { calculateGeometry } from "./video";
 import { poll_keyboard } from "./keyboard";
-import { bbs, set_wstcp_address } from "./bbs";
+import { set_protocol, set_wstcp_address } from "./bbs";
 import { fetchProgram } from "./fetchProgram";
 
 let stopped = false; // allows to stop/resume the emulation
@@ -53,8 +53,9 @@ export async function main() {
    let href = window.location.href;
    let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g);   
 
-   if(is_retrocampus) {
-      if(options.wstcp === undefined) set_wstcp_address("wss://bbs.sblendorio.eu:8080");
+   if(is_retrocampus || options.petsciibbs !== undefined) {
+      set_wstcp_address(options.wstcp ?? "wss://bbs.sblendorio.eu:8080");
+      set_protocol(options.protocol ?? "bbs");
       if(options.load === undefined) fetchProgram("nippur72/terminal.prg");
    }
 
