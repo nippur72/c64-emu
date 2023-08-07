@@ -1,5 +1,7 @@
 //********************************************************************
 
+import { string2Uint8Array } from "./utils";
+
 type SendFunction = (buffer: number[])=>void;
 
 let modem_send_to_ws: SendFunction|undefined = undefined;
@@ -120,25 +122,7 @@ export function modemClose() {
    if(modem_close !== undefined) modem_close();
 }
 
-function string2Array(str: string) {
-   let arr = [];
-
-   for(let t=0; t<str.length; t++)
-      arr.push(str.charCodeAt(t) & 0xFF);
-
-   return new Uint8Array(arr);
-}
-
-function array2String(data: number[]) {
-   let str = "";
-
-   for(var index=0; index<data.length; index++)
-      str += String.fromCharCode(data[index]);
-
-   return str;
-}
-
 function printm(msg: string) {
-   let data = string2Array(msg);
+   let data = string2Uint8Array(msg);
    data.forEach(e=>modem_receive_buffer.push(e));
 }
