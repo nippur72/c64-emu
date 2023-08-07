@@ -2,12 +2,14 @@ export class BBSConnector {
    address = "";     
    protocol: string | undefined;
 
-   ws_connection: WebSocket | undefined;   
+   ws_connection: WebSocket | undefined;     
    
    on_error = (err: Event)=> {};
    on_open = ()=> {};
    on_close = ()=> {};
    on_data = (data: Uint8Array)=> {};
+
+   connected = false;
    
    connect() {
       // empty string means no protocol (undefined)
@@ -17,17 +19,20 @@ export class BBSConnector {
       this.ws_connection.binaryType = "arraybuffer";
 
       this.ws_connection.onerror = (err)=>{
-         console.log('websocket connection error');
+         console.log('websocket connection error');         
+         this.connected = false;
          this.on_error(err);
       };
                
       this.ws_connection.onopen = () => {
-         console.log('websocket connected');
+         console.log('websocket connected');         
+         this.connected = true;
          this.on_open();
       };
    
       this.ws_connection.onclose = () => {
-         console.log('websocket disconnected');
+         console.log('websocket disconnected');         
+         this.connected = false;
          this.on_close();
       };      
 
@@ -52,6 +57,9 @@ export class BBSConnector {
    }   
    
    close() {
-      if(this.ws_connection !== undefined) this.ws_connection.close();
+      if(this.ws_connection !== undefined) {         
+         this.ws_connection.close();
+         this.connected = false;
+      }
    }
 }

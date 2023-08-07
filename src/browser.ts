@@ -1,7 +1,6 @@
 // handles interaction between browser and emulation 
 
 import { goAudio, stopAudio, audioContextResume } from "./audio";
-import { modemClose } from "./bbs";
 import { c64 } from "./emscripten_wrapper";
 import { loadBytes } from "./filesystem";
 
@@ -44,8 +43,7 @@ onResize();
 // **** save state on close ****
 
 window.onbeforeunload = function(e) {
-   // close connection to the BBS
-   modemClose();
+   
 };
 
 // **** visibility change ****

@@ -2,47 +2,41 @@
 import { M6821 } from "./m6821";
 import { M6850 } from "./m6850";
 
-import { BBSConnector } from "./videotel";
+import { BBSConnector } from "../bbs_connector";
 
 let PIA = new M6821();
 let ACIA = new M6850();
 
-export let bbs = new BBSConnector();
+export let videotel = new BBSConnector();
 
-bbs.on_error = ()=>{
+videotel.on_error = ()=>{
    // sets NO CARRIER
    ACIA.STATUS_NO_CARRIER = 1;
    console.log("NO CARRIER");
 };
 
-bbs.on_close = ()=>{
+videotel.on_close = ()=>{
    // sets NO CARRIER
    ACIA.STATUS_NO_CARRIER = 1;
    console.log("NO CARRIER");
 };
 
-bbs.on_open = ()=>{
+videotel.on_open = ()=>{
    // clears NO CARRIER
    ACIA.STATUS_NO_CARRIER = 0;
    PIA.PA &= 127;
    console.log("CARRIER DETECT");
 };
 
-bbs.on_data = (data)=>{
+videotel.on_data = (data)=>{
    ACIA.receive_data(data);
 }
 
 ACIA.transmit_data = (data) => {
-   bbs.send_data_to_bbs([data]);
+   videotel.send_data_to_bbs([data]);
 }
 
-PIA.afterdialtone = ()=>bbs.connect();
-
-// bbs.connect();
-
-(window as any).bbs  = bbs;
-(window as any).ACIA = ACIA;
-(window as any).PIA  = PIA;
+PIA.afterdialtone = ()=>videotel.connect();
 
 // function called from C64 when the whole system is reset
 export function cbm_6499_reset()
