@@ -153,5 +153,5 @@ export class M6850
 }
 
 function debug(m: string) {
-   if(true) console.log(m);
+   //console.log(m);
 }

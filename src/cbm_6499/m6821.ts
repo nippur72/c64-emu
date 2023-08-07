@@ -156,6 +156,6 @@ export class M6821 {
 }
 
 function debug(m: string) {
-   if(true) console.log(m);
+   //console.log(m);
 }
  
