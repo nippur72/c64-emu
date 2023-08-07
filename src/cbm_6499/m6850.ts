@@ -83,9 +83,8 @@ export class M6850
          this.get_status_byte();
          if(this.STATUS_RECEIVER_FULL) {
             this.RECEIVE_DATA = this.receive_buffer[0];
-            this.receive_buffer = this.receive_buffer.slice(1);
-            //debug(`cpu receive ${data}`);
-            this.wait_after_read = 2;         
+            this.receive_buffer = this.receive_buffer.slice(1);            
+            this.wait_after_read = 3;         
          }
          return this.RECEIVE_DATA;
       }
