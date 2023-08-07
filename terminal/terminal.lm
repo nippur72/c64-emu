@@ -24,6 +24,8 @@ main:
     lda #147 : jsr CHROUT    ; clr
     lda #5   : jsr CHROUT    ; white
 
+    lda #0   : sta MODEM_DATA_OUT   ; force connection with BBS
+
 terminal:
     ; controlla se ci sono caratteri da stampare nel buffer
     lda MODEM_DATA_REQ

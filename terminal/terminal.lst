@@ -1,23 +1,23 @@
 ------- FILE terminal.asm LEVEL 1 PASS 2
-      1  08a4		       d7 f2	   MODEM_DATA_OUT EQU	$D7F2
-      2  08a4		       d7 f0	   MODEM_DATA_IN EQU	$D7F0
-      3  08a4		       d7 f3	   MODEM_DATA_REQ EQU	$D7F3
-      4  08a4		       d7 f1	   MODEM_ACK  EQU	$D7F1	; PORTA PER L'HANDSHAKE
-      5  08a4		       d7 f4	   MODEM_CONNST EQU	$D7F4
-      6  08a4 ????
-      7  08a4 ????				      PROCESSOR	6502
-      8  08a4 ????
-      9  08a4 ????
-     10  08a4 ????	       ff e4	   GETIN      =	$FFE4
-     11  08a4 ????	       ff d2	   CHROUT     =	$FFD2
-     12  08a4 ????
-     13  08a4 ????
-     14  08a4 ????
-     15  08a4 ????
-     16  08a4 ????
-     17  08a4 ????
-     18  08a4 ????
-     19  08a4 ????
+      1  08a9		       d7 f2	   MODEM_DATA_OUT EQU	$D7F2
+      2  08a9		       d7 f0	   MODEM_DATA_IN EQU	$D7F0
+      3  08a9		       d7 f3	   MODEM_DATA_REQ EQU	$D7F3
+      4  08a9		       d7 f1	   MODEM_ACK  EQU	$D7F1	; PORTA PER L'HANDSHAKE
+      5  08a9		       d7 f4	   MODEM_CONNST EQU	$D7F4
+      6  08a9 ????
+      7  08a9 ????				      PROCESSOR	6502
+      8  08a9 ????
+      9  08a9 ????
+     10  08a9 ????	       ff e4	   GETIN      =	$FFE4
+     11  08a9 ????	       ff d2	   CHROUT     =	$FFD2
+     12  08a9 ????
+     13  08a9 ????
+     14  08a9 ????
+     15  08a9 ????
+     16  08a9 ????
+     17  08a9 ????
+     18  08a9 ????
+     19  08a9 ????
      20  0801					      ORG	2049
      21  0801
      22  0801
@@ -37,104 +37,107 @@
      36  0825		       a9 05		      LDA	#5
      37  0827		       20 d2 ff 	      JSR	CHROUT
      38  082a
-     39  082a				   TERMINAL
-     40  082a
-     41  082a		       ad f3 d7 	      LDA	MODEM_DATA_REQ
-     42  082d				   IF_35_START
-     43  082d		       c9 00		      CMP	#0
-     44  082f		       f0 28		      BEQ	IF_35_ELSE
-     45  0831		       20 74 08 	      JSR	CURSOR_OFF
-     46  0834				   DO_37_START
-     47  0834
-     48  0834		       a2 00		      LDX	#0
-     49  0836		       86 d4		      STX	$D4
-     50  0838		       86 d8		      STX	$D8
-     51  083a
-     52  083a
-     53  083a		       ad f0 d7 	      LDA	MODEM_DATA_IN
-     54  083d
-     55  083d
-     56  083d				   IF_47_START
-     57  083d		       c9 07		      CMP	#7
-     58  083f		       d0 03		      BNE	IF_47_ELSE
-     59  0841		       20 85 08 	      JSR	TERM_BELL
-     60  0844				   IF_47_ELSE
-     61  0844				   IF_47_END
-     62  0844
-     63  0844
-     64  0844
-     65  0844		       20 d2 ff 	      JSR	CHROUT
-     66  0847
-     67  0847
-     68  0847
-     69  0847		       a9 00		      LDA	#0
-     70  0849		       8d f1 d7 	      STA	MODEM_ACK
-     71  084c		       a9 01		      LDA	#1
-     72  084e		       8d f1 d7 	      STA	MODEM_ACK
-     73  0851
-     74  0851
-     75  0851		       ad f3 d7 	      LDA	MODEM_DATA_REQ
-     76  0854		       d0 de		      BNE	DO_37_START
-     77  0856				   DO_37_END
-     78  0856
-     79  0856		       20 6f 08 	      JSR	CURSOR_ON
-     80  0859				   IF_35_ELSE
-     81  0859				   IF_35_END
-     82  0859
-     83  0859
-     84  0859		       20 e4 ff 	      JSR	GETIN
-     85  085c				   IF_72_START
-     86  085c		       c9 00		      CMP	#0
-     87  085e		       f0 03		      BEQ	IF_72_ELSE
-     88  0860		       8d f2 d7 	      STA	MODEM_DATA_OUT
-     89  0863				   IF_72_ELSE
-     90  0863				   IF_72_END
-     91  0863
-     92  0863
-     93  0863
-     94  0863		       ad f4 d7 	      LDA	MODEM_CONNST
-     95  0866		       8d 20 d0 	      STA	53280
-     96  0869		       8d 21 d0 	      STA	53281
-     97  086c
-     98  086c		       4c 2a 08 	      JMP	TERMINAL
-     99  086f
-    100  086f
-    101  086f
-    102  086f
-    103  086f				   CURSOR_ON
-    104  086f		       a0 00		      LDY	#$00
-    105  0871		       84 cc		      STY	$CC
-    106  0873		       60		      RTS
-    107  0874
-    108  0874				   CURSOR_OFF
-    109  0874		       a4 cc		      LDY	$CC
-    110  0876				   IF_94_START
-    111  0876		       d0 08		      BNE	IF_94_ELSE
-    112  0878		       a0 01		      LDY	#$01
-    113  087a		       84 cd		      STY	$CD
-    114  087c				   DO_89_START
-    115  087c		       a4 cf		      LDY	$CF
-    116  087e		       d0 fc		      BNE	DO_89_START
-    117  0880				   DO_89_END
-    118  0880
-    119  0880				   IF_94_ELSE
-    120  0880				   IF_94_END
-    121  0880		       a0 ff		      LDY	#$FF
-    122  0882		       84 cc		      STY	$CC
-    123  0884		       60		      RTS
-    124  0885
-    125  0885				   TERM_BELL
-    126  0885		       a0 0f		      LDY	#15
-    127  0887		       8c 18 d4 	      STY	$D418
-    128  088a		       a0 14		      LDY	#20
-    129  088c		       8c 01 d4 	      STY	$D401
-    130  088f		       a0 00		      LDY	#0
-    131  0891		       8c 05 d4 	      STY	$D405
-    132  0894		       a0 f9		      LDY	#249
-    133  0896		       8c 06 d4 	      STY	$D406
-    134  0899		       a0 11		      LDY	#17
-    135  089b		       8c 04 d4 	      STY	$D404
-    136  089e		       a0 10		      LDY	#16
-    137  08a0		       8c 04 d4 	      STY	$D404
-    138  08a3		       60		      RTS
-    139  08a4
+     39  082a		       a9 00		      LDA	#0
+     40  082c		       8d f2 d7 	      STA	MODEM_DATA_OUT
+     41  082f
+     42  082f				   TERMINAL
+     43  082f
+     44  082f		       ad f3 d7 	      LDA	MODEM_DATA_REQ
+     45  0832				   IF_38_START
+     46  0832		       c9 00		      CMP	#0
+     47  0834		       f0 28		      BEQ	IF_38_ELSE
+     48  0836		       20 79 08 	      JSR	CURSOR_OFF
+     49  0839				   DO_40_START
+     50  0839
+     51  0839		       a2 00		      LDX	#0
+     52  083b		       86 d4		      STX	$D4
+     53  083d		       86 d8		      STX	$D8
+     54  083f
+     55  083f
+     56  083f		       ad f0 d7 	      LDA	MODEM_DATA_IN
+     57  0842
+     58  0842
+     59  0842				   IF_50_START
+     60  0842		       c9 07		      CMP	#7
+     61  0844		       d0 03		      BNE	IF_50_ELSE
+     62  0846		       20 8a 08 	      JSR	TERM_BELL
+     63  0849				   IF_50_ELSE
+     64  0849				   IF_50_END
+     65  0849
+     66  0849
+     67  0849
+     68  0849		       20 d2 ff 	      JSR	CHROUT
+     69  084c
+     70  084c
+     71  084c
+     72  084c		       a9 00		      LDA	#0
+     73  084e		       8d f1 d7 	      STA	MODEM_ACK
+     74  0851		       a9 01		      LDA	#1
+     75  0853		       8d f1 d7 	      STA	MODEM_ACK
+     76  0856
+     77  0856
+     78  0856		       ad f3 d7 	      LDA	MODEM_DATA_REQ
+     79  0859		       d0 de		      BNE	DO_40_START
+     80  085b				   DO_40_END
+     81  085b
+     82  085b		       20 74 08 	      JSR	CURSOR_ON
+     83  085e				   IF_38_ELSE
+     84  085e				   IF_38_END
+     85  085e
+     86  085e
+     87  085e		       20 e4 ff 	      JSR	GETIN
+     88  0861				   IF_75_START
+     89  0861		       c9 00		      CMP	#0
+     90  0863		       f0 03		      BEQ	IF_75_ELSE
+     91  0865		       8d f2 d7 	      STA	MODEM_DATA_OUT
+     92  0868				   IF_75_ELSE
+     93  0868				   IF_75_END
+     94  0868
+     95  0868
+     96  0868
+     97  0868		       ad f4 d7 	      LDA	MODEM_CONNST
+     98  086b		       8d 20 d0 	      STA	53280
+     99  086e		       8d 21 d0 	      STA	53281
+    100  0871
+    101  0871		       4c 2f 08 	      JMP	TERMINAL
+    102  0874
+    103  0874
+    104  0874
+    105  0874
+    106  0874				   CURSOR_ON
+    107  0874		       a0 00		      LDY	#$00
+    108  0876		       84 cc		      STY	$CC
+    109  0878		       60		      RTS
+    110  0879
+    111  0879				   CURSOR_OFF
+    112  0879		       a4 cc		      LDY	$CC
+    113  087b				   IF_97_START
+    114  087b		       d0 08		      BNE	IF_97_ELSE
+    115  087d		       a0 01		      LDY	#$01
+    116  087f		       84 cd		      STY	$CD
+    117  0881				   DO_92_START
+    118  0881		       a4 cf		      LDY	$CF
+    119  0883		       d0 fc		      BNE	DO_92_START
+    120  0885				   DO_92_END
+    121  0885
+    122  0885				   IF_97_ELSE
+    123  0885				   IF_97_END
+    124  0885		       a0 ff		      LDY	#$FF
+    125  0887		       84 cc		      STY	$CC
+    126  0889		       60		      RTS
+    127  088a
+    128  088a				   TERM_BELL
+    129  088a		       a0 0f		      LDY	#15
+    130  088c		       8c 18 d4 	      STY	$D418
+    131  088f		       a0 14		      LDY	#20
+    132  0891		       8c 01 d4 	      STY	$D401
+    133  0894		       a0 00		      LDY	#0
+    134  0896		       8c 05 d4 	      STY	$D405
+    135  0899		       a0 f9		      LDY	#249
+    136  089b		       8c 06 d4 	      STY	$D406
+    137  089e		       a0 11		      LDY	#17
+    138  08a0		       8c 04 d4 	      STY	$D404
+    139  08a3		       a0 10		      LDY	#16
+    140  08a5		       8c 04 d4 	      STY	$D404
+    141  08a8		       60		      RTS
+    142  08a9
