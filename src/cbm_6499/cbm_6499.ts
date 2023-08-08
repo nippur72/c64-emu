@@ -38,7 +38,19 @@ ACIA.transmit_data = (data) => {
    videotel.send_data_to_bbs([data]);
 }
 
-PIA.afterdialtone = ()=>videotel.connect();
+PIA.number_decoder.afterdialtone = (numtel: string)=> {
+   videotel.connect();
+   /*
+   if(numtel === "0522750051") {
+      console.log("good number!");
+      videotel.connect();
+   }
+   else {
+      ACIA.STATUS_NO_CARRIER = 1;
+      console.log("bad number!");
+   }
+   */
+}
 
 // function called from C64 when the whole system is reset
 export function cbm_6499_reset()

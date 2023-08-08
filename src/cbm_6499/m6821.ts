@@ -30,8 +30,7 @@ export class M6821 {
    DDRB = 0;
 
    // dialtone detection
-   pb5_timer: number | undefined;
-   afterdialtone = ()=>{};
+   number_decoder = new NumberDecoder();   
 
    ring(value: boolean) {
       if(value) this.CRA = this.CRA | 0b10000000; 
@@ -133,23 +132,24 @@ export class M6821 {
  
    write_PB(data: number) {
       // dialtone detection starts bbs delayed
-      let PB5 = (this.PB >> 5) & 1;
-      let old_PB5 = (data >> 5) & 1;
+      let PB5 = (data >> 5) & 1;  let old_PB5 = (this.PB >> 5) & 1;
+      let PB6 = (data >> 6) & 1;  let old_PB6 = (this.PB >> 6) & 1;
+      let PB7 = (data >> 7) & 1;  let old_PB7 = (this.PB >> 7) & 1;
+
+      this.number_decoder.tick(PB6, PB5, data);
+
+      //console.log(data.toString(2));
       
-      if(PB5 === 0 && old_PB5 === 1) {
-         // cancel old timer
-         if(this.pb5_timer) clearTimeout(this.pb5_timer);
-         this.pb5_timer = setTimeout(()=>{
-            this.afterdialtone();
-            this.pb5_timer = undefined;
-         }, 3000) as any as number;
+      if(PB5 === 0 && old_PB5 === 1) {         
+
          debug("PIA: dialing...");
       }
 
-      if((this.PB & 128) !== (data & 128)) {
+      if(PB7 !== old_PB7) {
          // PB7 changed
-         debug(`******** PB7: ${(data & 128)>>7}`);
+         debug(`******** PB7: ${PB7}`);
       }
+
       this.PB = data;
       debug(`PIA: set PB to $${hex(data,2)}`);                      
    }
@@ -158,4 +158,62 @@ export class M6821 {
 function debug(m: string) {
    //console.log(m);
 }
- 
+
+class NumberDecoder
+{
+   started = false;
+   pulses = 0;
+   telnumber: number[] = [];
+   finish_timer: number|undefined;
+
+   old_PB6 = 0;
+   old_PB5 = 0;
+
+   afterdialtone = (number: string)=>{};
+   
+   tick(PB6: number, PB5: number, data: number) {
+      if(!this.started) {
+         if(PB5 === 1 && this.old_PB5 === 0) {
+            this.started = true;
+            this.pulses = 0;
+            this.telnumber = [];
+            console.log("dialing started");
+         }
+      }
+      else {
+         if(PB6 === 0 && this.old_PB6 === 1) {
+            // dialtone click
+            // console.log("PB6 down (dial)");
+            this.pulses++;
+            const audio = new Audio("dialtone_click.mp3"); // taken from "https://www.fesliyanstudios.com/play-mp3/387"
+            audio.play();
+         }      
+         if(PB6 === 1 && this.old_PB6 === 0) {
+            // end of dialtone click
+         }
+         if(PB5 === 0 && this.old_PB5 === 1) {
+            // end of digit
+            this.telnumber.push(this.pulses % 10);
+            this.pulses = 0;
+
+            // cancel old timer
+            if(this.finish_timer) clearTimeout(this.finish_timer);
+            this.finish_timer = setTimeout(()=>{
+               this.number_composed(this.telnumber.join(""));
+               this.finish_timer = undefined;
+            }, 3000) as any as number;
+
+            // console.log("PB5 down (end number)");
+         }
+      }
+      this.old_PB5 = PB5;
+      this.old_PB6 = PB6;      
+   }
+
+   number_composed(telnum: string) {
+      console.log(`dialing completed! called ${telnum}`);
+      this.started = false;
+      this.afterdialtone(telnum);
+   }
+}
+
