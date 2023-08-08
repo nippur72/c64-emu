@@ -2414,7 +2414,7 @@ function vdp_screen_update(ptr) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "b02ba4fd20a670861462.wasm";
+module.exports = __webpack_require__.p + "7a6085b8570174664c27.wasm";
 
 /***/ })
 
