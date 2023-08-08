@@ -38,7 +38,9 @@ export class BBSConnector {
 
       this.ws_connection.onmessage = (e) => {      
          if (e.data instanceof ArrayBuffer) {            
-            this.on_data(new Uint8Array(e.data));                        
+            this.on_data(new Uint8Array(e.data)); 
+            let l = Array.from(new Uint8Array(e.data));
+            //console.log(`ACIA.receive_data(${JSON.stringify(l)});`);
          }
          else {
             console.log(`websocket Received string: '${e.data}'`);
