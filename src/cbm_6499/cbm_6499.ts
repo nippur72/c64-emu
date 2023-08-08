@@ -9,6 +9,8 @@ let ACIA = new M6850();
 
 export let videotel = new BBSConnector();
 
+(window as any).ACIA = ACIA;
+
 videotel.on_error = ()=>{
    // sets NO CARRIER
    ACIA.STATUS_NO_CARRIER = 1;
@@ -45,10 +47,10 @@ export function cbm_6499_reset()
 }
 
 // function called from C64 when CPU reads I/O in the range $DE00-DFFF
-export function cbm_6499_read(addr: number)
+export function cbm_6499_read(addr: number, ticks: number)
 {   
    if(addr < 0xDF00) return PIA.read(addr);
-   else              return ACIA.cpu_read(addr);
+   else              return ACIA.cpu_read(addr, ticks);
 }
 
 // function called from C64 when CPU writes I/O in the range $DE00-DFFF

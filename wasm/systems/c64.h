@@ -935,7 +935,7 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
         if(!(pins & M6502_RDY)) {        
             if (pins & M6502_RW) {                  
                 /* modem read: chiama la funzione JavaScript "cbm_6499_read(addr)" */
-                byte data = (byte) EM_ASM_INT({ return cbm_6499_read($0); }, addr);
+                byte data = (byte) EM_ASM_INT({ return cbm_6499_read($0, $1); }, addr, sys->ticks);
                 M6502_SET_DATA(pins, data);
             }
             else {

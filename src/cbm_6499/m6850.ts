@@ -22,6 +22,8 @@ ACIA = motorola 6850
 
 */
 
+import { SpeedLimiter } from "./speed_limiter";
+
 const config_bits = [
     { bits: 7, parity: "even", stop_bits: 2 },
     { bits: 7, parity: "odd" , stop_bits: 2 },
@@ -49,16 +51,12 @@ export class M6850
    STATUS_FRAMING_ERROR     = 0;
    STATUS_RECEIVER_OVERRUN  = 0;
    STATUS_PARITY_ERROR      = 0;
-   STATUS_IRQ               = 0;
+   STATUS_IRQ               = 0;   
 
-   receive_buffer: number[] = [];  
-   wait_after_read = 0;   
-
-   //save_buffer: number[] = [];
+   buffer = new SpeedLimiter();
          
-   get_status_byte() {
-      this.STATUS_RECEIVER_FULL = this.receive_buffer.length === 0 ? 0 : 1;
-      if(this.wait_after_read > 0) this.STATUS_RECEIVER_FULL = 0;
+   get_status_byte(ticks: number) {
+      this.STATUS_RECEIVER_FULL = this.buffer.get_status(ticks);
       
       let status = 
          (this.STATUS_RECEIVER_FULL     << 0) |
@@ -72,19 +70,16 @@ export class M6850
       return status;
    }
 
-   cpu_read(addr: number) {
+   cpu_read(addr: number, ticks: number) {
       let RS = addr & 1;
       if(RS === 0) {
-         let data = this.get_status_byte();
-         this.wait_after_read--;         
+         let data = this.get_status_byte(ticks);                 
          return data;
       }
       else {         
-         this.get_status_byte();
+         this.get_status_byte(ticks);
          if(this.STATUS_RECEIVER_FULL) {
-            this.RECEIVE_DATA = this.receive_buffer[0];
-            this.receive_buffer = this.receive_buffer.slice(1);            
-            this.wait_after_read = 3;         
+            this.RECEIVE_DATA = this.buffer.get_byte(ticks);            
          }
          return this.RECEIVE_DATA;
       }
@@ -104,7 +99,7 @@ export class M6850
          // master reset
          if(CR10 === 0b11) {
             debug(`ACIA: master RESET`);
-            this.receive_buffer = [];        
+            this.buffer.reset();        
             this.TRANSMIT_DATA = 0;
             this.RECEIVE_DATA = 0;
 
@@ -115,9 +110,7 @@ export class M6850
             this.STATUS_FRAMING_ERROR     = 0;
             this.STATUS_RECEIVER_OVERRUN  = 0;
             this.STATUS_PARITY_ERROR      = 0;
-            this.STATUS_IRQ               = 0;
-         
-            this.get_status_byte();                     
+            this.STATUS_IRQ               = 0;                                   
          }
          else {
             debug(`ACIA: clock divide by ${clock_divider[CR10]}`);
@@ -141,9 +134,7 @@ export class M6850
 
    // called from BBS connector
    receive_data(data: Uint8Array) {
-      data.forEach(e=>this.receive_buffer.push(e));
-      //data.forEach(e=>this.save_buffer.push(e));
-      this.get_status_byte();
+      this.buffer.receive_data(data);            
       debug(`ACIA: received ${data.length} bytes`);
    }
 
@@ -154,3 +145,4 @@ export class M6850
 function debug(m: string) {
    //console.log(m);
 }
+
