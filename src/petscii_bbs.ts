@@ -63,7 +63,7 @@ petscii.on_error = (err)=> {
 
 petscii.on_open = () => {
    console.log('BBS: connected');
-   printm(`${new Date().toLocaleTimeString()} CONNECTED\r`);
+   // printm(`${new Date().toLocaleTimeString()} CONNECTED\r`);
 };
 
 petscii.on_close = () => {
