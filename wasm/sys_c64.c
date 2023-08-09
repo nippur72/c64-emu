@@ -81,10 +81,11 @@ void end_frame_cb(void* user_data) {
    uint8_t c64_pixel;
 
    for(int r=0;r<272;r++) {
-      for(int c=0;c<392;c++) {               
-         *dst++ = c64palette[*src][0];
-         *dst++ = c64palette[*src][1];
-         *dst++ = c64palette[*src][2]; 
+      for(int c=0;c<392;c++) { 
+         uint8_t *c64color = c64palette[*src];
+         *dst++ = c64color[0];
+         *dst++ = c64color[1];
+         *dst++ = c64color[2]; 
          *dst++ = 255;         
          src++;    
       }   
@@ -273,9 +274,4 @@ void sys_set_cbm_6499_nbank(int value) {
 EMSCRIPTEN_KEEPALIVE
 void sys_set_emulate_cbm_6499(bool value) {
    sys.emulate_6499 = value;
-}
-
-EMSCRIPTEN_KEEPALIVE
-void sys_set_external_irq(bool value) {
-   sys.external_irq = value;
 }
