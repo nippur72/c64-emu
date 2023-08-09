@@ -5,7 +5,7 @@ rem ..\emsdk\emsdk_env.bat
 
 del dist\*.wasm /q
 
-call emcc wasm\prova.c -O3 ^
+call emcc wasm\sys_c64.c -O3 ^
    -s EXPORTED_RUNTIME_METHODS=ccall,cwrap ^
    -s ENVIRONMENT=web ^
    -s MODULARIZE=1 ^

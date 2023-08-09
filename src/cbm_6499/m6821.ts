@@ -34,8 +34,7 @@ export class M6821 {
 
    ring(value: boolean) {
       if(value) this.CRA = this.CRA | 0b10000000; 
-      else      this.CRA = this.CRA & 0b01111111; 
-      //c64.set_external_irq(value);
+      else      this.CRA = this.CRA & 0b01111111;       
    }
  
    reset() {
