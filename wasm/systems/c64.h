@@ -580,8 +580,8 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
 
     // @@@ nippur72 start
     sys->ticks++; 
-    // create a 60 Hz signal for TOD (CIA1)
-    if(++sys->tod_counter > (C64_FREQUENCY / 50)) sys->tod_counter = 0; 
+    // create a 50 Hz signal for TOD 
+    if(++sys->tod_counter >= (C64_FREQUENCY / 50)) sys->tod_counter = 0; 
     // @@@ nippur72 end
 
     // those pins are set each tick by the CIAs and VIC
@@ -720,6 +720,10 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
     */
     {
         M6526_SET_PAB(cia2_pins, 0xFF, 0xFF);
+
+        // feed the TOD singnal to the CIA2                // @@@ nippur72
+        if(sys->tod_counter == 0) cia2_pins |= M6526_TOD;  // @@@ nippur72
+
         cia2_pins = m6526_tick(&sys->cia_2, cia2_pins);
         sys->vic_bank_select = ((~M6526_GET_PA(cia2_pins))&3)<<14;
         if (cia2_pins & M6502_IRQ) {
