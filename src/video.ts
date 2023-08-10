@@ -48,14 +48,23 @@ let imagedata_buf8 = new Uint8ClampedArray(imagedata_buffer);
 let bmp = new Uint32Array(imagedata_buffer);
 */
 
+/*
+// Get 2d drawing context
+const ctx = document.getElementById('c').getContext('2d');
+const pointer = instance.exports._render();
+const data = new Uint8ClampedArray(memory.buffer, pointer, width * height * 4);
+const img = new ImageData(data, width, height);
+ctx.putImageData(img, 0, 0);
+*/
+
 export function vdp_screen_update(ptr: number) {
    let start = ptr / get_wasm_instance().HEAPU32.BYTES_PER_ELEMENT;
    let size = WW*HH;
-   let buffer = get_wasm_instance().HEAPU32.subarray(start,start+size);
+   let buffer = get_wasm_instance().HEAPU32.subarray(start,start+size);   
 
    let ptr0 = 0;
    let ptr1 = 0;
-   let ptr2 = WW*2;
+   let ptr2 = WW*2;   
 
    for(let y=0;y<HH;y++) {
       for(let x=0;x<WW;x++) {
