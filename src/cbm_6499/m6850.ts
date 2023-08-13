@@ -53,10 +53,11 @@ export class M6850
    STATUS_PARITY_ERROR      = 0;
    STATUS_IRQ               = 0;   
 
-   buffer = new SpeedLimiter();
-         
+   limiter = new SpeedLimiter(1200, 1200);
+            
    get_status_byte(ticks: number) {
-      this.STATUS_RECEIVER_FULL = this.buffer.get_status(ticks);
+      this.STATUS_RECEIVER_FULL = this.limiter.rx_full(ticks);
+      this.STATUS_TRANSMITTER_EMPTY = this.limiter.tx_empty(ticks);
       
       let status = 
          (this.STATUS_RECEIVER_FULL     << 0) |
@@ -79,13 +80,13 @@ export class M6850
       else {         
          this.get_status_byte(ticks);
          if(this.STATUS_RECEIVER_FULL) {
-            this.RECEIVE_DATA = this.buffer.get_byte(ticks);            
+            this.RECEIVE_DATA = this.limiter.read_byte(ticks);            
          }
          return this.RECEIVE_DATA;
       }
    }
 
-   cpu_write(addr: number, data: number) {
+   cpu_write(addr: number, data: number, ticks: number) {
       let RS = addr & 1;
       if(RS === 0) {
          debug(`ACIA: set control = (${data.toString(2)})`);
@@ -99,7 +100,7 @@ export class M6850
          // master reset
          if(CR10 === 0b11) {
             debug(`ACIA: master RESET`);
-            this.buffer.reset();        
+            this.limiter.reset();        
             this.TRANSMIT_DATA = 0;
             this.RECEIVE_DATA = 0;
 
@@ -123,10 +124,9 @@ export class M6850
       }
       else {
          debug(`ACIA: set transmit data = (${data})`);
-         this.TRANSMIT_DATA = data;
-         this.STATUS_TRANSMITTER_EMPTY = 0;
+         this.TRANSMIT_DATA = data;         
          this.transmit_data(this.TRANSMIT_DATA);
-         this.STATUS_TRANSMITTER_EMPTY = 1;
+         this.limiter.tx_byte_sent(ticks);
       }
    }
 
@@ -134,7 +134,7 @@ export class M6850
 
    // called from BBS connector
    receive_data(data: Uint8Array) {
-      this.buffer.receive_data(data);            
+      this.limiter.push_rx_data(data);            
       debug(`ACIA: received ${data.length} bytes`);
    }
 
