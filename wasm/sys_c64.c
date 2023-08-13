@@ -238,3 +238,8 @@ EMSCRIPTEN_KEEPALIVE
 void sys_set_emulate_cbm_6499(bool value) {
    sys.emulate_6499 = value;
 }
+
+//EMSCRIPTEN_KEEPALIVE
+//void sys_set_external_irq(bool value) {
+//   sys.external_irq = value;
+//}

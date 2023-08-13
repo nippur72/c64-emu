@@ -387,6 +387,7 @@ typedef struct {
     bool _GAME;
     uint8_t cbm_6499_nbank;
     bool emulate_6499;
+    //bool external_irq;
     uint32_t ticks;
     uint32_t tod_counter;
     // @@@ nippur72 end
@@ -531,6 +532,7 @@ void c64_init(c64_t* sys, const c64_desc_t* desc) {
     sys->_GAME = false;        // at PIA RESET CB2 is input thus GAME is selected
     sys->cbm_6499_nbank = 1;  // at PIA RESET CA2 is input thus bank 1 is selected 
     sys->emulate_6499 = false;
+    //sys->external_irq = false;
     // @@@ nippur72 end
 }
 
@@ -822,6 +824,13 @@ static uint64_t _c64_tick(c64_t* sys, uint64_t pins) {
             mem_wr(&sys->mem_cpu, addr, M6502_GET_DATA(pins));
         }
     }
+
+    // @@@ nippur72 start
+    //if(sys->external_irq) {
+    //    pins |= M6502_IRQ;
+    //    sys->external_irq = false;
+    //}
+    // @@@ nippur72 end    
 
     return pins;
 }
