@@ -30,12 +30,7 @@ export class M6821 {
    DDRB = 0;
 
    // dialtone detection
-   number_decoder = new NumberDecoder();   
-
-   ring(value: boolean) {
-      if(value) this.CRA = this.CRA | 0b10000000; 
-      else      this.CRA = this.CRA & 0b01111111;       
-   }
+   number_decoder = new NumberDecoder();
  
    reset() {
       this.CRA = 0;
