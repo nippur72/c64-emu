@@ -4,7 +4,8 @@
   "description": "C64 emulator",
   "scripts": {
     "go": "http-server -p 8080",
-    "build": "npx webpack -w --mode=development"
+    "build": "npx webpack -w --mode=development",
+    "prod": "npx webpack --mode=production & del dist\\*.LICENSE.txt"
   },
   "repository": {
     "type": "git",
