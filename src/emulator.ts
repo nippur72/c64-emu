@@ -51,11 +51,11 @@ export async function main() {
 
    // autostart terminal if loaded from bbs.sblendorio.ue or bbs.retrocampus.com
    let href = window.location.href;
-   let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com|retrocampus\.com\/bbs)/g);   
+   let is_retrocampus = href.match(/^http:\/\/(bbs\.sblendorio\.eu|bbs\.retrocampus\.com)/g);   
 
+   petscii.address = options.wstcp ?? "wss://bbs.sblendorio.eu:8080";
+   petscii.protocol = options.protocol ?? "bbs";
    if(is_retrocampus || options.petsciibbs !== undefined) {
-      petscii.address = options.wstcp ?? "wss://bbs.sblendorio.eu:8080";
-      petscii.protocol = options.protocol ?? "bbs";
       if(options.load === undefined) fetchProgram("nippur72/terminal.prg");
    }
 
