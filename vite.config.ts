@@ -4,19 +4,16 @@ import { resolve } from 'path';
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
   return {
-    define: {
-      'import.meta.url': 'document.currentScript && document.currentScript.src || ""',
-    },
     build: {
       lib: {
         entry: resolve(__dirname, 'src/index.ts'),
         name: 'c64emu',
-        formats: ['iife'],
+        formats: ['es'],
         fileName: () => 'bundle.js',
       },
       outDir: 'dist',
       emptyOutDir: false,
-      sourcemap: isDev ? 'inline' : true,
+      sourcemap: false,
       minify: isDev ? false : 'esbuild',
       rollupOptions: {
         output: {
