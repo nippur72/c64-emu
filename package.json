@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "http-server -p 8080",
     "build": "npx webpack -w --mode=development",
-    "prod": "npx webpack --mode=production & del dist\\*.LICENSE.txt"
+    "prod": "npx webpack --mode=production & del dist\\*.LICENSE.txt",
+    "buildwasm": "mkwasm.bat"
   },
   "repository": {
     "type": "git",
