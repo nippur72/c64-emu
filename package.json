@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "C64 emulator",
   "scripts": {
-    "go": "http-server -p 8080",
+    "serve": "http-server -p 8080",
     "build": "npx webpack -w --mode=development",
     "prod": "npx webpack --mode=production & del dist\\*.LICENSE.txt"
   },
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
+    "http-server": "^14.1.1",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.2",

@@ -1,6 +1,6 @@
 import { c64 } from "./emscripten_wrapper";
 import { fetchProgram } from "./fetchProgram";
-import { externalLoad } from "./mdawson";
+import { externalLoad } from "./externalLoad";
 import { videotel } from "./cbm_6499/cbm_6499";
 
 type QueryStringObject = {[key: string]:string};
@@ -33,7 +33,7 @@ export async function parseQueryStringCommands() {
       const name = options.load;
       if(name.startsWith("http")) {
          // external load
-         externalLoad("loadPrg", name);
+         await externalLoad(name);
       }
       else {
          // internal load
